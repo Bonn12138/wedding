@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>星月之恋</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #0a043c;
+            overflow: hidden;
+            cursor: pointer;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+        }
+
+        h1 {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: '华文行楷', cursive;
+            font-size: 4em;
+            background: linear-gradient(45deg, #ffd700, #ffafcc);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px #ffd700); }
+            to { filter: drop-shadow(0 0 20px #ffafcc); }
+        }
+
+        .photo-wall {
+            position: absolute;
+            bottom: 15%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .photo {
+            width: 180px;
+            height: 240px;
+            border: 2px solid rgba(255,215,0,0.8);
+            border-radius: 5px;
+            transform: perspective(800px) rotateY(20deg);
+            transition: all 0.5s;
+            background-size: cover;
+            box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+        }
+
+        .photo:hover {
+            transform: perspective(800px) rotateY(0deg) translateY(-20px);
+            z-index: 999;
+        }
+
+        .message {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8em;
+            color: rgba(255,255,255,0.9);
+            font-family: '宋体';
+            text-shadow: 0 0 10px #ffafcc;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, 0px); }
+            50% { transform: translate(-50%, -20px); }
+        }
+
+        .hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.8);
+            font-family: '微软雅黑';
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="container">
+        <h1>❤ 情人节快乐 ❤</h1>
+        <div class="message">[小猪] to [坤坤]</div>
+        <div class="photo-wall">
+            <div class="photo" style="background-image: url('photo1.jpg')"></div>
+            <div class="photo" style="background-image: url('photo2.jpg')"></div>
+            <div class="photo" style="background-image: url('photo3.jpg')"></div>
+        </div>
+    </div>
+    <div class="hint">← 移动鼠标召唤星辰轨迹 →</div>
+
+    <audio autoplay loop>
+        <source src="https://cdn.pixabay.com/audio/2022/03/22/audio_8b4803d966.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        class Firework {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.trail = [];
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.resize();
+                window.addEventListener('resize', this.resize.bind(this));
+                // 新增更灵敏的鼠标追踪
+                document.addEventListener('mousemove', (e) => {
+                    this.mouseX = e.clientX;
+                    this.mouseY = e.clientY;
+                    this.createTrail(); // 实时创建轨迹
+                });
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            createSpark(x, y) {
+                const colors = ['#ffd700', '#ffafcc', '#a2d5f2', '#ffffff'];
+                for(let i=0; i<100; i++) {
+                    this.particles.push({
+                        x, y,
+                        vx: (Math.random()-0.5)*10,
+                        vy: (Math.random()-0.5)*10 - 3,
+                        color: colors[Math.floor(Math.random()*colors.length)],
+                        life: 1
+                    });
+                }
+            }
+
+            createTrail() {
+                const colors = ['#ff69b4', '#ffd700', '#a2d5f2', '#ffafcc'];
+                this.trail.push({
+                    x: this.mouseX,
+                    y: this.mouseY,
+                    size: Math.random() * 8 + 8,
+                    color: colors[Math.floor(Math.random()*colors.length)],
+                    alpha: 1,
+                    velocity: {
+                        x: (Math.random() - 0.5) * 0.5,
+                        y: (Math.random() - 0.5) * 0.5
+                    }
+                });
+                if(this.trail.length > 30) this.trail.shift();
+            }
+
+            draw() {
+                this.ctx.fillStyle = 'rgba(10,4,60,0.1)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // 绘制烟花粒子
+                this.particles.forEach((p, i) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.1;
+                    p.life -= 0.015;
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, 2, 0, Math.PI*2);
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.globalAlpha = p.life;
+                    this.ctx.fill();
+
+                    if(p.life <= 0) this.particles.splice(i, 1);
+                });
+
+                // 绘制鼠标拖尾
+                this.trail.forEach((p, i) => {
+                    const progress = i / this.trail.length;
+                    this.ctx.globalAlpha = p.alpha * progress;
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.save();
+                    this.ctx.translate(p.x, p.y);
+                    this.ctx.rotate(Math.PI/4 * progress);
+                    this.drawHeart(0, 0, p.size);
+                    this.ctx.restore();
+
+                    p.x += p.velocity.x;
+                    p.y += p.velocity.y;
+                    p.alpha *= 0.92;
+                });
+
+                requestAnimationFrame(this.draw.bind(this));
+            }
+
+            drawHeart(x, y, size) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, y + size/2);
+                this.ctx.bezierCurveTo(
+                    x, y - size, 
+                    x - size*1.5, y - size/2, 
+                    x, y + size
+                );
+                this.ctx.bezierCurveTo(
+                    x + size*1.5, y - size/2, 
+                    x, y - size, 
+                    x, y + size/2
+                );
+                this.ctx.fill();
+            }
+        }
+
+        const firework = new Firework(document.getElementById('canvas'));
+        function animate() {
+            firework.createTrail();
+            firework.draw();
+        }
+        animate();
+
+        // 点击生成烟花
+        document.addEventListener('click', (e) => {
+            firework.createSpark(e.clientX, e.clientY);
+        });
+
+        // 自动烟花
+        setInterval(() => {
+            firework.createSpark(
+                Math.random()*window.innerWidth,
+                Math.random()*window.innerHeight
+            );
+        }, 300);
+
+        // 3D照片墙
+        document.querySelectorAll('.photo').forEach(photo => {
+            photo.addEventListener('mousemove', (e) => {
+                const rect = photo.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                photo.style.transform = `
+                    perspective(800px)
+                    rotateY(${x*20}deg)
+                    rotateX(${-y*20}deg)
+                    translateY(${-y*20}px)
+                `;
+            });
+
+            photo.addEventListener('mouseleave', () => {
+                photo.style.transform = 'perspective(800px) rotateY(20deg)';
+            });
+        });
+    </script>
+</body>
+</html>
