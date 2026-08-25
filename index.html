@@ -264,47 +264,55 @@
             font-family: 'Noto Serif SC', 'Songti SC', serif;
         }
 
-        /* 音乐控制区 */
-        .music-section {
-            margin: 12px 0 20px;
+        /* 右上角背景音乐浮动按钮 */
+        .music-btn {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(217, 198, 169, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .music-toggle {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid #d9c7ae;
-            border-radius: 30px;
-            padding: 8px 22px;
             cursor: pointer;
-            transition: all 0.25s ease;
-            color: #6b5d4b;
-            font-size: 0.85rem;
-            letter-spacing: 1.5px;
-            font-weight: 400;
+            z-index: 100;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+            transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .music-toggle:hover {
-            background: rgba(255, 250, 240, 0.9);
+        .music-btn:hover {
+            background: rgba(255, 252, 246, 0.92);
             border-color: #bfa888;
         }
 
-        .music-icon {
-            font-size: 1.2rem;
-            line-height: 1;
+        .music-btn:active {
+            transform: scale(0.94);
         }
 
-        .music-hint {
-            font-size: 0.7rem;
-            color: #ae9c86;
-            letter-spacing: 1px;
+        .music-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: #b49b78;
+            opacity: 0.55;
+            transition: opacity 0.25s ease;
+        }
+
+        /* 播放中：音符点亮并旋转 */
+        .music-btn.playing svg {
+            opacity: 1;
+            animation: music-spin 4s linear infinite;
+        }
+
+        @keyframes music-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .divider-light {
@@ -571,13 +579,11 @@
         <!-- 恭候光临 — 香槟色居中独立行 -->
         <div class="greeting-line">恭 候 您 的 光 临</div>
 
-        <!-- 背景音乐：放入 assets/music/bgm.mp3 后自动出现控制按钮 -->
-        <div class="music-section" id="musicSection">
-            <div class="music-toggle" id="musicToggle" role="button" aria-label="背景音乐开关" tabindex="0">
-                <span class="music-icon" id="musicIcon">🎵</span>
-                <span id="musicText">播放音乐</span>
-            </div>
-            <span class="music-hint">轻触开启 · 再次轻触暂停</span>
+        <!-- 背景音乐：放入 assets/music/bgm.mp3 后右上角自动出现音乐图标 -->
+        <div class="music-btn" id="musicBtn" role="button" aria-label="背景音乐开关" tabindex="0" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/>
+            </svg>
         </div>
 
         <div class="divider-light"></div>
@@ -737,34 +743,36 @@
             loadStoredData();
 
             // ----- 背景音乐控制 -----
-            const musicSection = document.getElementById('musicSection');
-            const musicToggle = document.getElementById('musicToggle');
-            const musicIcon = document.getElementById('musicIcon');
-            const musicText = document.getElementById('musicText');
+            const musicBtn = document.getElementById('musicBtn');
             const bgMusic = document.getElementById('bgMusic');
             let isPlaying = false;
 
-            // 若 assets/music/bgm.mp3 尚未放置，隐藏音乐控制区
+            // 若 assets/music/bgm.mp3 尚未放置，隐藏音乐按钮
             fetch('assets/music/bgm.mp3', { method: 'HEAD' })
-                .then(res => { if (!res.ok) musicSection.style.display = 'none'; })
-                .catch(() => { musicSection.style.display = 'none'; });
+                .then(res => { if (!res.ok) musicBtn.style.display = 'none'; })
+                .catch(() => { musicBtn.style.display = 'none'; });
 
             function toggleMusic() {
                 if (isPlaying) {
                     bgMusic.pause();
                     bgMusic.currentTime = 0;
-                    musicIcon.textContent = '🎵';
-                    musicText.textContent = '播放音乐';
+                    musicBtn.classList.remove('playing');
+                    musicBtn.setAttribute('aria-pressed', 'false');
                     isPlaying = false;
                 } else {
-                    bgMusic.play().catch(() => {});
-                    musicIcon.textContent = '🎶';
-                    musicText.textContent = '暂停音乐';
+                    bgMusic.play().catch(() => {
+                        // 播放失败（如浏览器拦截）时回退状态
+                        musicBtn.classList.remove('playing');
+                        musicBtn.setAttribute('aria-pressed', 'false');
+                        isPlaying = false;
+                    });
+                    musicBtn.classList.add('playing');
+                    musicBtn.setAttribute('aria-pressed', 'true');
                     isPlaying = true;
                 }
             }
-            musicToggle.addEventListener('click', toggleMusic);
-            musicToggle.addEventListener('keydown', (e) => {
+            musicBtn.addEventListener('click', toggleMusic);
+            musicBtn.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     toggleMusic();
