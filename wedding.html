@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>许博仁 & 蔡银坤 · 婚礼邀请</title>
+    <style>
+        /* 全局重置 — 纯白到香槟色渐变背景 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* 纯白到香槟色渐变：从上至下柔和过渡 */
+            background: linear-gradient(180deg, #ffffff 0%, #fefcf8 30%, #fdf8f0 60%, #f9ecd9 100%);
+            background-attachment: fixed;
+            font-family: 'Inter', 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px 16px;
+            line-height: 1.5;
+            color: #2c2c2c;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 主卡片 — 半透明白，与渐变融合，纯净优雅 */
+        .invitation-card {
+            max-width: 600px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06), 0 10px 30px -8px rgba(0, 0, 0, 0.02);
+            padding: 44px 36px 40px;
+            text-align: center;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        /* 顶部装饰线 */
+        .ornament {
+            margin: 0 auto 28px;
+            width: 48px;
+            height: 2px;
+            background: #d9c6a9;
+            border-radius: 2px;
+        }
+
+        /* 新人姓名 */
+        .couple-names {
+            font-size: 3rem;
+            font-weight: 400;
+            letter-spacing: 5px;
+            color: #1e1e1e;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            font-family: 'Cormorant Garamond', 'Times New Roman', 'Songti SC', serif;
+            text-transform: uppercase;
+        }
+
+        .couple-names span {
+            display: inline-block;
+            margin: 0 8px;
+            font-weight: 300;
+            color: #c2a57a;
+            font-size: 2.2rem;
+            transform: translateY(-2px);
+        }
+
+        /* 日期 */
+        .wedding-date {
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 6px;
+            color: #777;
+            margin-bottom: 28px;
+            text-transform: uppercase;
+        }
+
+        /* 照片区域 — 主次分明布局 */
+        .photo-gallery {
+            width: 100%;
+            margin-bottom: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 主照片 — 大图占位 */
+        .main-photo {
+            width: 100%;
+            aspect-ratio: 3 / 2;
+            background: #faf5ed;
+            border-radius: 24px;
+            border: 1px solid #e9dcc8;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #b5a18a;
+            font-size: 1rem;
+            letter-spacing: 1.5px;
+            transition: transform 0.2s;
+            padding: 20px;
+        }
+
+        .main-photo i {
+            font-style: normal;
+            font-size: 2.8rem;
+            margin-bottom: 12px;
+            color: #cdba9d;
+            font-weight: 200;
+            line-height: 1;
+        }
+        .main-photo span {
+            font-size: 0.8rem;
+            color: #bba88d;
+        }
+
+        /* 次要照片 — 四张整齐排列 */
+        .secondary-photos {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+
+        .secondary-photo {
+            aspect-ratio: 1 / 1;
+            background: #faf7f0;
+            border-radius: 16px;
+            border: 1px solid #eee3d3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #b5a18a;
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .secondary-photo i {
+            font-style: normal;
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+            color: #cdba9d;
+            font-weight: 200;
+        }
+
+        .secondary-photo span {
+            font-size: 0.6rem;
+            color: #bbaa93;
+            line-height: 1.3;
+        }
+
+        /* 婚礼信息 */
+        .details {
+            text-align: left;
+            margin-bottom: 28px;
+            background: transparent;
+            padding: 8px 0;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1rem;
+            padding: 12px 0;
+            color: #3a3a3a;
+            border-bottom: 1px solid rgba(210, 190, 160, 0.3);
+        }
+
+        .detail-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: #9e8b72;
+            min-width: 72px;
+            text-align: right;
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            font-weight: 400;
+            color: #2e2e2e;
+            letter-spacing: 1px;
+            text-align: left;
+            flex: 1;
+        }
+
+        .location-highlight {
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        /* 音乐控制区 */
+        .music-section {
+            margin: 12px 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .music-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid #d9c7ae;
+            border-radius: 30px;
+            padding: 8px 22px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            color: #6b5d4b;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            font-weight: 400;
+            user-select: none;
+        }
+
+        .music-toggle:hover {
+            background: rgba(255, 250, 240, 0.9);
+            border-color: #bfa888;
+        }
+
+        .music-icon {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .music-hint {
+            font-size: 0.7rem;
+            color: #ae9c86;
+            letter-spacing: 1px;
+        }
+
+        .divider-light {
+            width: 70px;
+            height: 1.5px;
+            background: #dacbad;
+            margin: 24px auto 18px;
+            border-radius: 1px;
+        }
+
+        /* RSVP 姓名收集 */
+        .rsvp-section {
+            margin-top: 8px;
+        }
+
+        .rsvp-title {
+            font-size: 0.95rem;
+            letter-spacing: 3px;
+            color: #7f6e5a;
+            margin-bottom: 18px;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .name-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 14px 20px;
+            border: 1px solid #ddd0bd;
+            border-radius: 40px;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            color: #2c2c2c;
+            outline: none;
+            transition: all 0.25s ease;
+            font-family: inherit;
+            backdrop-filter: blur(4px);
+        }
+
+        .name-input::placeholder {
+            color: #b9a88f;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .name-input:focus {
+            border-color: #bfa888;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(190, 168, 136, 0.1);
+        }
+
+        .submit-btn {
+            background: #ffffffd9;
+            border: 1px solid #cbb694;
+            color: #4a3f31;
+            padding: 12px 36px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            background: #fcf7f0;
+            margin-top: 6px;
+            width: fit-content;
+            font-family: inherit;
+            backdrop-filter: blur(4px);
+        }
+
+        .submit-btn:hover {
+            background: #f7efe4;
+            border-color: #ae9472;
+            letter-spacing: 4px;
+        }
+
+        .submit-btn:active {
+            background: #efe3d3;
+            transform: scale(0.98);
+        }
+
+        .submission-message {
+            margin-top: 18px;
+            font-size: 0.85rem;
+            color: #6b5d4b;
+            letter-spacing: 1px;
+            min-height: 24px;
+            transition: opacity 0.3s;
+        }
+
+        .footer-note {
+            margin-top: 26px;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #bcab94;
+            text-transform: uppercase;
+        }
+
+        /* 响应式 */
+        @media (max-width: 480px) {
+            .invitation-card {
+                padding: 36px 22px 32px;
+                border-radius: 28px;
+            }
+            .couple-names {
+                font-size: 2.4rem;
+                letter-spacing: 3px;
+            }
+            .couple-names span {
+                font-size: 1.8rem;
+                margin: 0 5px;
+            }
+            .wedding-date {
+                font-size: 0.9rem;
+                letter-spacing: 4px;
+            }
+            .main-photo {
+                aspect-ratio: 4/3;
+            }
+            .secondary-photos {
+                gap: 8px;
+            }
+            .detail-item {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            .detail-label {
+                min-width: auto;
+                text-align: center;
+                width: 100%;
+                margin-bottom: -6px;
+            }
+            .detail-value {
+                text-align: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="invitation-card">
+        <!-- 装饰线 -->
+        <div class="ornament"></div>
+
+        <!-- 新人姓名 许博仁 & 蔡银坤 -->
+        <h1 class="couple-names">
+            许博仁 <span>&</span> 蔡银坤
+        </h1>
+
+        <!-- 日期 2026.10.03 -->
+        <div class="wedding-date">
+            2026.10.03
+        </div>
+
+        <!-- 照片区域：主照 + 四张次要照片 -->
+        <div class="photo-gallery">
+            <!-- 主照片（大图） -->
+            <div class="main-photo">
+                <i>🖼️</i>
+                主婚纱照预留
+                <span>建议尺寸 1200x800</span>
+            </div>
+            <!-- 次要照片四张 -->
+            <div class="secondary-photos">
+                <div class="secondary-photo">
+                    <i>🖼️</i>
+                    <span>照片1</span>
+                </div>
+                <div class="secondary-photo">
+                    <i>🖼️</i>
+                    <span>照片2</span>
+                </div>
+                <div class="secondary-photo">
+                    <i>🖼️</i>
+                    <span>照片3</span>
+                </div>
+                <div class="secondary-photo">
+                    <i>🖼️</i>
+                    <span>照片4</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 婚礼信息 -->
+        <div class="details">
+            <div class="detail-item">
+                <span class="detail-label">地点</span>
+                <span class="detail-value location-highlight">河北省保定市易县好年景大酒店</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">时间</span>
+                <span class="detail-value">2026年10月3日 · 星期六</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">恭候</span>
+                <span class="detail-value">您的光临</span>
+            </div>
+        </div>
+
+        <!-- 背景音乐预留区 -->
+        <div class="music-section">
+            <div class="music-toggle" id="musicToggle" role="button" aria-label="背景音乐开关">
+                <span class="music-icon" id="musicIcon">🎵</span>
+                <span id="musicText">播放音乐</span>
+            </div>
+            <span class="music-hint">(背景音乐预留)</span>
+        </div>
+
+        <!-- 分割线 -->
+        <div class="divider-light"></div>
+
+        <!-- RSVP 姓名收集 -->
+        <div class="rsvp-section">
+            <div class="rsvp-title">确认出席 · 姓名登记</div>
+            <div class="input-group">
+                <input type="text" id="guestName" class="name-input" placeholder="请输入您的姓名" autocomplete="name" aria-label="受邀者姓名">
+                <button id="submitNameBtn" class="submit-btn" type="button">提交</button>
+            </div>
+            <div id="confirmationMessage" class="submission-message"></div>
+        </div>
+
+        <!-- 脚注 -->
+        <div class="footer-note">· 诚挚邀请 ·</div>
+    </main>
+
+    <!-- 隐藏音频元素（背景音乐预留） -->
+    <audio id="bgMusic" loop preload="none" style="display: none;">
+        <!-- 预留：请将您的音乐文件放在同目录或替换为在线链接 -->
+        <!-- 例如: <source src="your-audio-file.mp3" type="audio/mpeg"> -->
+        <source src="" type="audio/mpeg">
+    </audio>
+
+    <script>
+        (function() {
+            // ----- 姓名收集逻辑 -----
+            const nameInput = document.getElementById('guestName');
+            const submitBtn = document.getElementById('submitNameBtn');
+            const messageDiv = document.getElementById('confirmationMessage');
+            const storageKey = 'wedding_guest_name_bodhi_yin';
+
+            function checkStoredName() {
+                try {
+                    const storedName = localStorage.getItem(storageKey);
+                    if (storedName && storedName.trim() !== '') {
+                        messageDiv.textContent = `欢迎回来，${storedName}。我们已收到您的姓名。`;
+                        messageDiv.style.color = '#6b5d4b';
+                    }
+                } catch (e) {}
+            }
+
+            function handleSubmit() {
+                const rawName = nameInput.value.trim();
+                if (rawName === '') {
+                    messageDiv.textContent = '请填写您的姓名，以便我们为您准备席位。';
+                    messageDiv.style.color = '#b33a3a';
+                    nameInput.focus();
+                    return;
+                }
+                const namePattern = /^[\u4e00-\u9fa5A-Za-z\s·.]+$/;
+                if (!namePattern.test(rawName)) {
+                    messageDiv.textContent = '姓名格式似乎不太对，请使用中文、英文或空格。';
+                    messageDiv.style.color = '#b33a3a';
+                    return;
+                }
+                try {
+                    localStorage.setItem(storageKey, rawName);
+                } catch (e) {}
+                messageDiv.textContent = `感谢您的回复，${rawName}！期待与您相聚。`;
+                messageDiv.style.color = '#3f6e4a';
+                nameInput.value = '';
+                submitBtn.style.transform = 'scale(0.97)';
+                setTimeout(() => { submitBtn.style.transform = ''; }, 150);
+            }
+
+            submitBtn.addEventListener('click', handleSubmit);
+            nameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSubmit();
+                }
+            });
+            checkStoredName();
+
+            // ----- 背景音乐预留控制 -----
+            const musicToggle = document.getElementById('musicToggle');
+            const musicIcon = document.getElementById('musicIcon');
+            const musicText = document.getElementById('musicText');
+            const bgMusic = document.getElementById('bgMusic');
+            let isPlaying = false;
+
+            function toggleMusic() {
+                if (isPlaying) {
+                    bgMusic.pause();
+                    bgMusic.currentTime = 0;
+                    musicIcon.textContent = '🎵';
+                    musicText.textContent = '播放音乐';
+                    isPlaying = false;
+                } else {
+                    bgMusic.play().catch(() => {
+                        // 无音频源，静默处理
+                    });
+                    musicIcon.textContent = '🎶';
+                    musicText.textContent = '暂停音乐';
+                    isPlaying = true;
+                }
+            }
+
+            musicToggle.addEventListener('click', toggleMusic);
+        })();
+    </script>
+</body>
+</html>
