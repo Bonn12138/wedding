@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>许博仁 & 蔡银坤 · 婚礼邀请</title>
+    <meta name="description" content="许博仁 & 蔡银坤 诚邀您参加我们的婚礼 — 2026年10月3日 · 河北省保定市易县好年景大酒店">
+    <meta name="theme-color" content="#f9ecd9">
+    <!-- favicon（内联，无需图片文件） -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
+    <!-- 分享到微信 / QQ / iMessage 时的卡片信息 -->
+    <meta property="og:title" content="许博仁 & 蔡银坤 · 婚礼邀请">
+    <meta property="og:description" content="2026.10.03 · 河北省保定市易县好年景大酒店 · 恭候您的光临">
+    <meta property="og:image" content="https://bonn12138.github.io/wedding/assets/images/main.jpg">
     <style>
         /* 全局重置 — 纯白到香槟色渐变背景 */
         * {
@@ -102,7 +110,7 @@
             gap: 16px;
         }
 
-        /* 主照片 — 大图占位 */
+        /* 主照片 — 有图时显示图片，无图时显示占位样式 */
         .main-photo {
             width: 100%;
             aspect-ratio: 3 / 2;
@@ -119,6 +127,7 @@
             letter-spacing: 1.5px;
             transition: transform 0.2s;
             padding: 20px;
+            overflow: hidden;
         }
 
         .main-photo i {
@@ -132,6 +141,28 @@
         .main-photo span {
             font-size: 0.8rem;
             color: #bba88d;
+        }
+
+        /* 照片加载成功后的显示规则（主图与副图通用） */
+        .main-photo img,
+        .secondary-photo img {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .main-photo.has-photo,
+        .secondary-photo.has-photo {
+            padding: 0;
+            background: none;
+        }
+        .main-photo.has-photo img,
+        .secondary-photo.has-photo img {
+            display: block;
+        }
+        .main-photo.has-photo :not(img),
+        .secondary-photo.has-photo :not(img) {
+            display: none;
         }
 
         /* 次要照片 — 四张整齐排列 */
@@ -158,6 +189,7 @@
             transition: transform 0.2s;
             padding: 8px;
             text-align: center;
+            overflow: hidden;
         }
 
         .secondary-photo i {
@@ -219,7 +251,7 @@
             color: #1a1a1a;
         }
 
-        /* 恭候光临 — 独立香槟色居中区块，修正布局 */
+        /* 恭候光临 — 独立香槟色居中区块 */
         .greeting-line {
             margin: 20px 0 10px;
             font-size: 1.1rem;
@@ -481,27 +513,37 @@
             农历丙午年 八月廿三 · 星期六
         </div>
 
-        <!-- 照片区域：主照 + 四张次要照片 -->
+        <!-- 照片区域：把照片放入 assets/images/ 即自动显示，无图时显示占位样式 -->
         <div class="photo-gallery">
             <div class="main-photo">
+                <img src="assets/images/main.jpg" alt="许博仁与蔡银坤的婚纱照"
+                     onload="this.parentElement.classList.add('has-photo')" onerror="this.remove()">
                 <i>🖼️</i>
-                主婚纱照预留
-                <span>建议尺寸 1200x800</span>
+                <span class="ph-text">主婚纱照预留</span>
+                <span>放入 assets/images/main.jpg（建议 1200×800）</span>
             </div>
             <div class="secondary-photos">
                 <div class="secondary-photo">
+                    <img src="assets/images/photo1.jpg" alt="婚纱照一"
+                         onload="this.parentElement.classList.add('has-photo')" onerror="this.remove()">
                     <i>🖼️</i>
                     <span>照片1</span>
                 </div>
                 <div class="secondary-photo">
+                    <img src="assets/images/photo2.jpg" alt="婚纱照二"
+                         onload="this.parentElement.classList.add('has-photo')" onerror="this.remove()">
                     <i>🖼️</i>
                     <span>照片2</span>
                 </div>
                 <div class="secondary-photo">
+                    <img src="assets/images/photo3.jpg" alt="婚纱照三"
+                         onload="this.parentElement.classList.add('has-photo')" onerror="this.remove()">
                     <i>🖼️</i>
                     <span>照片3</span>
                 </div>
                 <div class="secondary-photo">
+                    <img src="assets/images/photo4.jpg" alt="婚纱照四"
+                         onload="this.parentElement.classList.add('has-photo')" onerror="this.remove()">
                     <i>🖼️</i>
                     <span>照片4</span>
                 </div>
@@ -523,13 +565,13 @@
         <!-- 恭候光临 — 香槟色居中独立行 -->
         <div class="greeting-line">恭 候 您 的 光 临</div>
 
-        <!-- 背景音乐预留区 -->
-        <div class="music-section">
-            <div class="music-toggle" id="musicToggle" role="button" aria-label="背景音乐开关">
+        <!-- 背景音乐：放入 assets/music/bgm.mp3 后自动出现控制按钮 -->
+        <div class="music-section" id="musicSection">
+            <div class="music-toggle" id="musicToggle" role="button" aria-label="背景音乐开关" tabindex="0">
                 <span class="music-icon" id="musicIcon">🎵</span>
                 <span id="musicText">播放音乐</span>
             </div>
-            <span class="music-hint">(背景音乐预留)</span>
+            <span class="music-hint">轻触开启 · 再次轻触暂停</span>
         </div>
 
         <div class="divider-light"></div>
@@ -564,7 +606,7 @@
     </main>
 
     <audio id="bgMusic" loop preload="none" style="display: none;">
-        <source src="" type="audio/mpeg">
+        <source src="assets/music/bgm.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -607,7 +649,7 @@
                     nameInput.focus();
                     return;
                 }
-                const namePattern = /^[\u4e00-\u9fa5A-Za-z\s·.]+$/;
+                const namePattern = /^[一-龥A-Za-z\s·.]+$/;
                 if (!namePattern.test(rawName)) {
                     messageDiv.textContent = '姓名格式似乎不太对，请使用中文、英文或空格。';
                     messageDiv.style.color = '#b33a3a';
@@ -644,9 +686,6 @@
                 // 成功提示
                 messageDiv.textContent = `感谢您的回复，${rawName}！住宿: ${accommodation}${phone ? '，电话: '+phone : ''}。期待与您相聚。`;
                 messageDiv.style.color = '#3f6e4a';
-                
-                // 可选：清空输入？不清空姓名方便查看，但可以清空电话？这里保留用户数据以便修改。
-                // 提供清晰反馈，不自动清空，以便用户确认。
             }
 
             submitBtn.addEventListener('click', handleSubmit);
@@ -664,12 +703,18 @@
             // 加载已有数据
             loadStoredData();
 
-            // ----- 背景音乐预留控制 -----
+            // ----- 背景音乐控制 -----
+            const musicSection = document.getElementById('musicSection');
             const musicToggle = document.getElementById('musicToggle');
             const musicIcon = document.getElementById('musicIcon');
             const musicText = document.getElementById('musicText');
             const bgMusic = document.getElementById('bgMusic');
             let isPlaying = false;
+
+            // 若 assets/music/bgm.mp3 尚未放置，隐藏音乐控制区
+            fetch('assets/music/bgm.mp3', { method: 'HEAD' })
+                .then(res => { if (!res.ok) musicSection.style.display = 'none'; })
+                .catch(() => { musicSection.style.display = 'none'; });
 
             function toggleMusic() {
                 if (isPlaying) {
@@ -686,6 +731,12 @@
                 }
             }
             musicToggle.addEventListener('click', toggleMusic);
+            musicToggle.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleMusic();
+                }
+            });
         })();
     </script>
 </body>
