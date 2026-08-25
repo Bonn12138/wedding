@@ -608,7 +608,7 @@
                 </div>
                 <button id="submitFormBtn" class="submit-btn" type="button">提交登记</button>
                 <div class="survey-hint" id="surveyHint" style="display:none;">
-                    点击后将跳转到腾讯问卷完成登记
+                    填写后点击，信息将自动带入腾讯问卷，确认提交即可
                 </div>
             </div>
             <div id="confirmationMessage" class="submission-message"></div>
@@ -623,12 +623,18 @@
 
     <script>
         (function() {
-            // ===== 配置：腾讯问卷链接 =====
-            // 在 https://wj.qq.com 免费创建表单后，把发布链接填到下面引号内，
-            // 即启用"一键跳转问卷"模式（结果在腾讯问卷后台查看、可导出 Excel）。
-            // 例如：const SURVEY_URL = 'https://wj.qq.com/s2/12345678/abcd/';
-            // 留空 '' 则使用页面内本地登记模式。
+            // ===== 配置：腾讯问卷链接与参数预填 =====
+            // SURVEY_URL：问卷发布链接，留空 '' 则使用纯本地登记模式。
+            // PREFILL_PARAMS：参数预填映射。在腾讯问卷编辑页为每道题设置"参数名"
+            // （题目设置中的 链接传参/参数名 选项），并把参数名按下面格式填好，
+            // 跳转时本页已填信息会自动带入问卷对应题目，宾客确认后提交即可。
+            // 若问卷侧未配置参数名，则跳转不带参数，问卷正常打开（宾客手动填写），不影响使用。
             const SURVEY_URL = 'https://wj.qq.com/s2/27676227/xenf/';
+            const PREFILL_PARAMS = {
+                name: 'name',           // "您的姓名"题的参数名
+                accommodation: 'stay',  // "是否需要住宿"题的参数名
+                phone: 'phone'          // "联系电话"题的参数名
+            };
 
             // ----- 获取表单元素 -----
             const nameInput = document.getElementById('guestName');
@@ -657,11 +663,31 @@
 
             // 提交登记信息
             function handleSubmit() {
-                // 问卷模式：直接跳转腾讯问卷，由问卷后台收集与统计
+                // 问卷模式：带参数跳转腾讯问卷，由问卷后台收集与统计
                 if (SURVEY_URL) {
-                    messageDiv.textContent = '正在为您跳转登记问卷…';
+                    // 读取页面已填信息，映射为问卷参数（只带已填写的项）
+                    const values = {
+                        name: nameInput.value.trim(),
+                        accommodation: accommodationSelect.value,
+                        phone: phoneInput.value.trim()
+                    };
+                    const params = new URLSearchParams();
+                    let filled = 0;
+                    Object.keys(PREFILL_PARAMS).forEach(key => {
+                        const v = values[key];
+                        if (v) {
+                            params.append(PREFILL_PARAMS[key], v);
+                            filled++;
+                        }
+                    });
+
+                    messageDiv.textContent = filled > 0
+                        ? '正在为您跳转登记问卷，信息已自动带入…'
+                        : '正在为您跳转登记问卷…';
                     messageDiv.style.color = '#6b5d4b';
-                    window.open(SURVEY_URL, '_blank');
+
+                    const joiner = SURVEY_URL.includes('?') ? '&' : '?';
+                    window.open(SURVEY_URL + (filled > 0 ? joiner + params.toString() : ''), '_blank');
                     return;
                 }
 
@@ -727,11 +753,12 @@
                 });
             });
 
-            // 问卷模式下：隐藏本地表单，只保留跳转按钮与提示
+            // 问卷模式下：保留本地表单用于预填，提交时带入问卷；同时更新提示
             if (SURVEY_URL) {
-                document.querySelectorAll('.input-row').forEach(row => row.style.display = 'none');
-                submitBtn.textContent = '前往登记';
-                document.getElementById('surveyHint').style.display = 'block';
+                submitBtn.textContent = '一键登记';
+                const hint = document.getElementById('surveyHint');
+                hint.style.display = 'block';
+                hint.textContent = '填写后点击，信息将自动带入腾讯问卷，确认提交即可';
             }
 
             // 加载已有数据
