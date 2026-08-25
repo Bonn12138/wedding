@@ -424,6 +424,12 @@
             transform: scale(0.98);
         }
 
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: wait;
+            letter-spacing: 3px;
+        }
+
         .submission-message {
             margin-top: 18px;
             font-size: 0.85rem;
@@ -431,15 +437,6 @@
             letter-spacing: 1px;
             min-height: 24px;
             transition: opacity 0.3s;
-            text-align: center;
-        }
-
-        /* 问卷跳转模式下的提示行 */
-        .survey-hint {
-            margin-top: 10px;
-            font-size: 0.7rem;
-            color: #ae9c86;
-            letter-spacing: 1px;
             text-align: center;
         }
 
@@ -607,9 +604,6 @@
                     <input type="tel" id="phoneNumber" class="phone-input" placeholder="请输入手机号码" autocomplete="tel" aria-label="联系电话">
                 </div>
                 <button id="submitFormBtn" class="submit-btn" type="button">提交登记</button>
-                <div class="survey-hint" id="surveyHint" style="display:none;">
-                    填写后点击，信息将自动带入腾讯问卷，确认提交即可
-                </div>
             </div>
             <div id="confirmationMessage" class="submission-message"></div>
         </div>
@@ -623,19 +617,6 @@
 
     <script>
         (function() {
-            // ===== 配置：腾讯问卷链接与参数预填 =====
-            // SURVEY_URL：问卷发布链接，留空 '' 则使用纯本地登记模式。
-            // PREFILL_PARAMS：参数预填映射。在腾讯问卷编辑页为每道题设置"参数名"
-            // （题目设置中的 链接传参/参数名 选项），并把参数名按下面格式填好，
-            // 跳转时本页已填信息会自动带入问卷对应题目，宾客确认后提交即可。
-            // 若问卷侧未配置参数名，则跳转不带参数，问卷正常打开（宾客手动填写），不影响使用。
-            const SURVEY_URL = 'https://wj.qq.com/s2/27676227/xenf/';
-            const PREFILL_PARAMS = {
-                name: 'name',           // "您的姓名"题的参数名
-                accommodation: 'stay',  // "是否需要住宿"题的参数名
-                phone: 'phone'          // "联系电话"题的参数名
-            };
-
             // ----- 获取表单元素 -----
             const nameInput = document.getElementById('guestName');
             const accommodationSelect = document.getElementById('needAccommodation');
@@ -661,36 +642,8 @@
                 } catch (e) {}
             }
 
-            // 提交登记信息
-            function handleSubmit() {
-                // 问卷模式：带参数跳转腾讯问卷，由问卷后台收集与统计
-                if (SURVEY_URL) {
-                    // 读取页面已填信息，映射为问卷参数（只带已填写的项）
-                    const values = {
-                        name: nameInput.value.trim(),
-                        accommodation: accommodationSelect.value,
-                        phone: phoneInput.value.trim()
-                    };
-                    const params = new URLSearchParams();
-                    let filled = 0;
-                    Object.keys(PREFILL_PARAMS).forEach(key => {
-                        const v = values[key];
-                        if (v) {
-                            params.append(PREFILL_PARAMS[key], v);
-                            filled++;
-                        }
-                    });
-
-                    messageDiv.textContent = filled > 0
-                        ? '正在为您跳转登记问卷，信息已自动带入…'
-                        : '正在为您跳转登记问卷…';
-                    messageDiv.style.color = '#6b5d4b';
-
-                    const joiner = SURVEY_URL.includes('?') ? '&' : '?';
-                    window.open(SURVEY_URL + (filled > 0 ? joiner + params.toString() : ''), '_blank');
-                    return;
-                }
-
+            // 提交登记信息：调用同域边缘函数 /api/rsvp 写入 KV 存储
+            async function handleSubmit() {
                 const rawName = nameInput.value.trim();
                 const accommodation = accommodationSelect.value;
                 const phone = phoneInput.value.trim();
@@ -725,7 +678,7 @@
                     }
                 }
 
-                // 构建数据对象并存储
+                // 构建数据对象并本地留档（便于下次回填，也是网络异常时的降级保存）
                 const formData = {
                     name: rawName,
                     accommodation: accommodation,
@@ -736,9 +689,36 @@
                     localStorage.setItem(storageKey, JSON.stringify(formData));
                 } catch (e) {}
 
-                // 成功提示
-                messageDiv.textContent = `感谢您的回复，${rawName}！住宿: ${accommodation}${phone ? '，电话: '+phone : ''}。期待与您相聚。`;
-                messageDiv.style.color = '#3f6e4a';
+                // 提交到服务端；失败时降级为本地保存并提示
+                submitBtn.disabled = true;
+                try {
+                    const res = await fetch('/api/rsvp', {
+                        method: 'POST',
+                        headers: { 'content-type': 'application/json' },
+                        body: JSON.stringify({
+                            name: rawName,
+                            accommodation: accommodation,
+                            phone: phone
+                        })
+                    });
+                    const data = await res.json().catch(() => ({}));
+
+                    if (res.ok && data.ok) {
+                        messageDiv.textContent = `感谢您的回复，${rawName}！期待与您相聚。`;
+                        messageDiv.style.color = '#3f6e4a';
+                    } else {
+                        messageDiv.textContent = (data && data.error)
+                            ? data.error
+                            : '提交暂时没有成功，您的信息已在本机保存，请稍后再试一次。';
+                        messageDiv.style.color = '#b33a3a';
+                    }
+                } catch (e) {
+                    // 网络异常或接口未部署（如纯静态托管）：本地保存兜底
+                    messageDiv.textContent = '网络不太顺畅，您的信息已在本机保存。请稍后再试，或直接联系新人。';
+                    messageDiv.style.color = '#b33a3a';
+                } finally {
+                    setTimeout(() => { submitBtn.disabled = false; }, 2000);
+                }
             }
 
             submitBtn.addEventListener('click', handleSubmit);
@@ -752,14 +732,6 @@
                     }
                 });
             });
-
-            // 问卷模式下：保留本地表单用于预填，提交时带入问卷；同时更新提示
-            if (SURVEY_URL) {
-                submitBtn.textContent = '一键登记';
-                const hint = document.getElementById('surveyHint');
-                hint.style.display = 'block';
-                hint.textContent = '填写后点击，信息将自动带入腾讯问卷，确认提交即可';
-            }
 
             // 加载已有数据
             loadStoredData();

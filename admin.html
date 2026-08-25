@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>宾客登记管理 · 许博仁 & 蔡银坤</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(180deg, #ffffff 0%, #fefcf8 30%, #fdf8f0 60%, #f9ecd9 100%);
+            background-attachment: fixed;
+            font-family: 'Inter', 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            padding: 24px 16px;
+            line-height: 1.5;
+            color: #2c2c2c;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .admin-card {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06);
+            padding: 36px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .admin-title {
+            text-align: center;
+            font-size: 1.3rem;
+            letter-spacing: 4px;
+            color: #4a3f31;
+            font-weight: 400;
+            margin-bottom: 6px;
+            font-family: 'Noto Serif SC', 'Songti SC', serif;
+        }
+
+        .admin-sub {
+            text-align: center;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: #ae9c86;
+            margin-bottom: 26px;
+        }
+
+        /* 口令输入区 */
+        .login-row {
+            display: flex;
+            gap: 10px;
+            max-width: 400px;
+            margin: 0 auto 8px;
+        }
+
+        .token-input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 1px solid #ddd0bd;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.85);
+            color: #2c2c2c;
+            outline: none;
+            font-family: inherit;
+            letter-spacing: 1px;
+        }
+
+        .token-input:focus {
+            border-color: #bfa888;
+            box-shadow: 0 0 0 4px rgba(190, 168, 136, 0.1);
+        }
+
+        .view-btn {
+            background: #fcf7f0;
+            border: 1px solid #cbb694;
+            color: #4a3f31;
+            padding: 12px 26px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+        }
+
+        .view-btn:hover {
+            background: #f7efe4;
+            border-color: #ae9472;
+        }
+
+        .status-msg {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #b33a3a;
+            letter-spacing: 1px;
+            min-height: 20px;
+            margin-bottom: 8px;
+        }
+
+        /* 统计卡片 */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 18px 0 22px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid #eee3d3;
+            border-radius: 16px;
+            padding: 14px 8px;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 1.6rem;
+            color: #1e1e1e;
+            font-weight: 400;
+            font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+        }
+
+        .stat-label {
+            font-size: 0.68rem;
+            color: #9e8b72;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        /* 名单表格 */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid #eee3d3;
+            background: rgba(255, 255, 255, 0.65);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background: rgba(250, 245, 237, 0.9);
+            color: #7f6e5a;
+            font-weight: 500;
+            letter-spacing: 1px;
+            padding: 12px 10px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 11px 10px;
+            border-top: 1px solid rgba(210, 190, 160, 0.25);
+            color: #3a3a3a;
+            white-space: nowrap;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+        }
+
+        .tag-yes { background: #e8f3e9; color: #3f6e4a; }
+        .tag-no  { background: #f5efe6; color: #9e8b72; }
+        .tag-maybe { background: #fdf3e3; color: #b07a2a; }
+
+        .toolbar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 22px;
+            flex-wrap: wrap;
+        }
+
+        .empty-tip {
+            text-align: center;
+            color: #ae9c86;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            padding: 30px 0;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.68rem;
+            letter-spacing: 2px;
+            color: #bcab94;
+        }
+
+        @media (max-width: 480px) {
+            .admin-card { padding: 28px 16px; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .login-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-card">
+        <div class="admin-title">宾客登记名单</div>
+        <div class="admin-sub">许博仁 & 蔡银坤 · 2026.10.03</div>
+
+        <!-- 口令输入 -->
+        <div class="login-row" id="loginRow">
+            <input type="password" id="tokenInput" class="token-input"
+                   placeholder="请输入管理口令" aria-label="管理口令">
+            <button id="viewBtn" class="view-btn" type="button">查看名单</button>
+        </div>
+        <div id="statusMsg" class="status-msg"></div>
+
+        <!-- 名单区（口令验证通过后显示） -->
+        <div id="resultArea" style="display:none;">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-num" id="statTotal">0</div>
+                    <div class="stat-label">已登记</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="statYes">0</div>
+                    <div class="stat-label">需要住宿</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="statNo">0</div>
+                    <div class="stat-label">不需要</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="statMaybe">0</div>
+                    <div class="stat-label">待定</div>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>提交时间</th>
+                            <th>姓名</th>
+                            <th>住宿</th>
+                            <th>联系电话</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+                <div id="emptyTip" class="empty-tip" style="display:none;">暂无登记，等待宾客回复</div>
+            </div>
+
+            <div class="toolbar">
+                <button id="refreshBtn" class="view-btn" type="button">刷新</button>
+                <a id="exportBtn" class="view-btn" style="text-decoration:none;" href="#">导出 CSV</a>
+            </div>
+        </div>
+
+        <div class="footer-note">· 数据更新略有延迟（约 1 分钟）属正常 ·</div>
+    </div>
+
+    <script>
+        (function() {
+            const tokenInput = document.getElementById('tokenInput');
+            const viewBtn = document.getElementById('viewBtn');
+            const statusMsg = document.getElementById('statusMsg');
+            const resultArea = document.getElementById('resultArea');
+            const tableBody = document.getElementById('tableBody');
+            const emptyTip = document.getElementById('emptyTip');
+            const exportBtn = document.getElementById('exportBtn');
+            const TOKEN_KEY = 'wedding_admin_token';
+
+            function formatTime(iso) {
+                if (!iso) return '';
+                try {
+                    return new Date(iso).toLocaleString('zh-CN', { hour12: false });
+                } catch (e) { return iso; }
+            }
+
+            function tagClass(v) {
+                if (v === '需要') return 'tag tag-yes';
+                if (v === '待定') return 'tag tag-maybe';
+                return 'tag tag-no';
+            }
+
+            async function loadList(token) {
+                statusMsg.textContent = '';
+                try {
+                    const res = await fetch('/api/rsvp?token=' + encodeURIComponent(token));
+                    const data = await res.json().catch(() => ({}));
+
+                    if (!res.ok || !data.ok) {
+                        statusMsg.textContent = (data && data.error) || ('请求失败（' + res.status + '）');
+                        if (res.status === 401) {
+                            sessionStorage.removeItem(TOKEN_KEY);
+                            resultArea.style.display = 'none';
+                            document.getElementById('loginRow').style.display = 'flex';
+                        }
+                        return;
+                    }
+
+                    // 验证通过：记住口令、展示名单
+                    try { sessionStorage.setItem(TOKEN_KEY, token); } catch (e) {}
+                    document.getElementById('loginRow').style.display = 'none';
+                    resultArea.style.display = 'block';
+                    exportBtn.href = '/api/rsvp-export?token=' + encodeURIComponent(token);
+
+                    const list = data.list || [];
+                    const count = { '需要': 0, '不需要': 0, '待定': 0 };
+                    tableBody.innerHTML = '';
+                    list.forEach(r => {
+                        if (count[r.accommodation] !== undefined) count[r.accommodation]++;
+                        const tr = document.createElement('tr');
+                        const time = r.updatedAt || r.createdAt;
+                        tr.innerHTML = '<td></td><td></td><td></td><td></td>';
+                        const tds = tr.querySelectorAll('td');
+                        tds[0].textContent = formatTime(time);
+                        tds[1].textContent = r.name;
+                        const tag = document.createElement('span');
+                        tag.className = tagClass(r.accommodation);
+                        tag.textContent = r.accommodation;
+                        tds[2].appendChild(tag);
+                        tds[3].textContent = r.phone || '—';
+                        tableBody.appendChild(tr);
+                    });
+
+                    document.getElementById('statTotal').textContent = list.length;
+                    document.getElementById('statYes').textContent = count['需要'];
+                    document.getElementById('statNo').textContent = count['不需要'];
+                    document.getElementById('statMaybe').textContent = count['待定'];
+                    emptyTip.style.display = list.length ? 'none' : 'block';
+                } catch (e) {
+                    statusMsg.textContent = '网络异常，请稍后再试。';
+                }
+            }
+
+            viewBtn.addEventListener('click', () => {
+                const token = tokenInput.value.trim();
+                if (!token) { statusMsg.textContent = '请输入管理口令。'; return; }
+                loadList(token);
+            });
+            tokenInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') viewBtn.click();
+            });
+            document.getElementById('refreshBtn').addEventListener('click', () => {
+                let token = '';
+                try { token = sessionStorage.getItem(TOKEN_KEY) || ''; } catch (e) {}
+                if (token) loadList(token);
+            });
+
+            // 已有口令则直接进入
+            let saved = '';
+            try { saved = sessionStorage.getItem(TOKEN_KEY) || ''; } catch (e) {}
+            if (saved) { tokenInput.value = saved; loadList(saved); }
+        })();
+    </script>
+</body>
+</html>
