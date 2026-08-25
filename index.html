@@ -434,6 +434,15 @@
             text-align: center;
         }
 
+        /* 问卷跳转模式下的提示行 */
+        .survey-hint {
+            margin-top: 10px;
+            font-size: 0.7rem;
+            color: #ae9c86;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
         .footer-note {
             margin-top: 26px;
             font-size: 0.7rem;
@@ -598,6 +607,9 @@
                     <input type="tel" id="phoneNumber" class="phone-input" placeholder="请输入手机号码" autocomplete="tel" aria-label="联系电话">
                 </div>
                 <button id="submitFormBtn" class="submit-btn" type="button">提交登记</button>
+                <div class="survey-hint" id="surveyHint" style="display:none;">
+                    点击后将跳转到腾讯问卷完成登记
+                </div>
             </div>
             <div id="confirmationMessage" class="submission-message"></div>
         </div>
@@ -611,6 +623,13 @@
 
     <script>
         (function() {
+            // ===== 配置：腾讯问卷链接 =====
+            // 在 https://wj.qq.com 免费创建表单后，把发布链接填到下面引号内，
+            // 即启用"一键跳转问卷"模式（结果在腾讯问卷后台查看、可导出 Excel）。
+            // 例如：const SURVEY_URL = 'https://wj.qq.com/s2/12345678/abcd/';
+            // 留空 '' 则使用页面内本地登记模式。
+            const SURVEY_URL = '';
+
             // ----- 获取表单元素 -----
             const nameInput = document.getElementById('guestName');
             const accommodationSelect = document.getElementById('needAccommodation');
@@ -638,6 +657,14 @@
 
             // 提交登记信息
             function handleSubmit() {
+                // 问卷模式：直接跳转腾讯问卷，由问卷后台收集与统计
+                if (SURVEY_URL) {
+                    messageDiv.textContent = '正在为您跳转登记问卷…';
+                    messageDiv.style.color = '#6b5d4b';
+                    window.open(SURVEY_URL, '_blank');
+                    return;
+                }
+
                 const rawName = nameInput.value.trim();
                 const accommodation = accommodationSelect.value;
                 const phone = phoneInput.value.trim();
@@ -699,6 +726,13 @@
                     }
                 });
             });
+
+            // 问卷模式下：隐藏本地表单，只保留跳转按钮与提示
+            if (SURVEY_URL) {
+                document.querySelectorAll('.input-row').forEach(row => row.style.display = 'none');
+                submitBtn.textContent = '前往登记';
+                document.getElementById('surveyHint').style.display = 'block';
+            }
 
             // 加载已有数据
             loadStoredData();
