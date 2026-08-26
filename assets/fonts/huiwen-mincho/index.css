@@ -1,0 +1,9 @@
+/* huiwen-mincho subset — 汇文明朝体（修正版）CC0
+   字形来源: https://github.com/bosswnx/huiwenmincho-improved */
+@font-face {
+  font-family: 'Huiwen Mincho';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(./files/huiwen-mincho-400-normal.woff2) format('woff2');
+}
