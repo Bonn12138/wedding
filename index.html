@@ -458,7 +458,7 @@
 
         .footer-note {
             margin-top: 26px;
-            font-size: 0.7rem;
+            font-size: 0.85rem;
             letter-spacing: 2px;
             color: #bcab94;
             text-transform: uppercase;
@@ -626,7 +626,7 @@
         <div class="footer-note">· 诚挚邀请 ·</div>
     </main>
 
-    <audio id="bgMusic" loop preload="none" style="display: none;">
+    <audio id="bgMusic" loop preload="auto" autoplay style="display: none;">
         <source src="assets/music/bgm.mp3" type="audio/mpeg">
     </audio>
 
@@ -798,21 +798,32 @@
             }
 
             // 默认打开音乐：先尝试自动播放；若被浏览器拦截，则在用户首次点击/触摸页面任意位置时启动
+            // <audio autoplay> 与 JS play() 双通道都试，谁先成功算谁的
             startMusic();
-            let gestureFallback = true;
-            ['click', 'touchstart', 'keydown'].forEach(evt => {
+
+            // audio 元素自身 autoplay 成功时（如微信 iOS），同步 UI 状态
+            bgMusic.addEventListener('play', () => { isPlaying = true; setPlayingUI(true); });
+            bgMusic.addEventListener('pause', () => { if (!bgMusic.ended) { isPlaying = false; setPlayingUI(false); } });
+
+            // 自动播放被拦截时的兜底：首次任意手势（点击/触摸/按键/滚动）即启动
+            // 用户明确点音乐按钮关闭时（userMuted 置位）不再自动启动
+            let userMuted = false;
+            musicBtn.addEventListener('click', () => { userMuted = true; });
+            ['click', 'touchstart', 'keydown', 'wheel'].forEach(evt => {
                 document.addEventListener(evt, function onFirstGesture() {
-                    if (gestureFallback) {
-                        gestureFallback = false;
-                        if (!isPlaying) startMusic();
-                    }
                     document.removeEventListener(evt, onFirstGesture);
-                });
+                    if (!isPlaying && !userMuted) startMusic();
+                }, { passive: true });
             });
             // 微信内自动播放的补充通道
             document.addEventListener('WeixinJSBridgeReady', function () {
+                if (window.WeixinJSBridge) {
+                    WeixinJSBridge.invoke('setKeepScreenOn', {}, function () {});
+                }
                 startMusic();
             });
+            // 已错过 WeixinJSBridgeReady 事件的情况（脚本晚于事件执行）
+            if (window.WeixinJSBridge) startMusic();
 
             musicBtn.addEventListener('click', toggleMusic);
             musicBtn.addEventListener('keydown', (e) => {
