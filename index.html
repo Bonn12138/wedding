@@ -61,24 +61,25 @@
             border-radius: 2px;
         }
 
-        /* 新人姓名 */
+        /* 新人姓名 — clamp 随屏自适应，窄屏自动缩小不折行 */
         .couple-names {
-            font-size: 3rem;
+            font-size: clamp(1.55rem, 8vw, 3rem);
             font-weight: 400;
-            letter-spacing: 5px;
+            letter-spacing: clamp(2px, 1.1vw, 5px);
             color: #1e1e1e;
             line-height: 1.2;
             margin-bottom: 16px;
             font-family: 'Huiwen Mincho', 'Cormorant Garamond', 'Times New Roman', 'Songti SC', serif;
             text-transform: uppercase;
+            white-space: nowrap;
         }
 
         .couple-names span {
             display: inline-block;
-            margin: 0 8px;
+            margin: 0 clamp(3px, 1.5vw, 8px);
             font-weight: 300;
             color: #c2a57a;
-            font-size: 2.2rem;
+            font-size: 0.73em;
             transform: translateY(-2px);
         }
 
@@ -465,19 +466,11 @@
             font-family: 'Huiwen Mincho', 'Noto Serif SC', 'Songti SC', serif;
         }
 
-        /* 响应式 */
+        /* 响应式 — 姓名字号已由 clamp 自适应，此处不再覆盖 */
         @media (max-width: 480px) {
             .invitation-card {
                 padding: 36px 22px 32px;
                 border-radius: 28px;
-            }
-            .couple-names {
-                font-size: 2.4rem;
-                letter-spacing: 3px;
-            }
-            .couple-names span {
-                font-size: 1.8rem;
-                margin: 0 5px;
             }
             .wedding-date {
                 font-size: 0.9rem;
@@ -525,7 +518,7 @@
 
         <!-- 新人姓名 许博仁 & 蔡银坤 -->
         <h1 class="couple-names">
-            许博仁 <span>&</span> 蔡银坤
+            蔡银坤 <span>&</span> 许博仁 
         </h1>
 
         <!-- 日期 2026.10.03 及农历 -->
