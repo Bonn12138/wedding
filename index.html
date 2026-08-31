@@ -37,20 +37,50 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* 主卡片 — 半透明白，与渐变融合，纯净优雅 */
+        /* 主卡片 — 半透明白，与渐变融合；金色古典双线框：外线 + 内线 + 四角回纹 + 边中菱珠 */
         .invitation-card {
+            position: relative;
             max-width: 600px;
             width: 100%;
             background-color: rgba(255, 255, 255, 0.78);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            border-radius: 40px;
+            border-radius: 24px;
+            border: 1.5px solid #c9b08a;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06), 0 10px 30px -8px rgba(0, 0, 0, 0.02);
             padding: 44px 36px 40px;
             text-align: center;
             transition: all 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.8);
         }
+
+        /* 内圈细线：与外线平行相隔 7px，四边中点各缀一颗金色菱珠 */
+        .invitation-card::before {
+            content: "";
+            position: absolute;
+            inset: 7px;
+            border: 1px solid rgba(201, 176, 138, 0.9);
+            border-radius: 17px;
+            pointer-events: none;
+            z-index: 1;
+            background:
+                radial-gradient(circle, #c9b08a 0 2.5px, transparent 2.5px) 50% 0 / 12px 12px no-repeat,
+                radial-gradient(circle, #c9b08a 0 2.5px, transparent 2.5px) 50% 100% / 12px 12px no-repeat,
+                radial-gradient(circle, #c9b08a 0 2.5px, transparent 2.5px) 0 50% / 12px 12px no-repeat,
+                radial-gradient(circle, #c9b08a 0 2.5px, transparent 2.5px) 100% 50% / 12px 12px no-repeat;
+        }
+
+        /* 四角回纹角饰 */
+        .frame-corner {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .frame-corner--tl { top: 8px; left: 8px; }
+        .frame-corner--tr { top: 8px; right: 8px; transform: rotate(90deg); }
+        .frame-corner--br { bottom: 8px; right: 8px; transform: rotate(180deg); }
+        .frame-corner--bl { bottom: 8px; left: 8px; transform: rotate(270deg); }
 
         /* 顶部装饰线 */
         .ornament {
@@ -908,7 +938,14 @@
         @media (max-width: 480px) {
             .invitation-card {
                 padding: 36px 22px 32px;
-                border-radius: 28px;
+                border-radius: 18px;
+            }
+            .invitation-card::before {
+                border-radius: 11px;
+            }
+            .frame-corner {
+                width: 26px;
+                height: 26px;
             }
             .wedding-date {
                 font-size: 0.9rem;
@@ -968,6 +1005,10 @@
     <canvas id="petalsCanvas"></canvas>
 
     <main class="invitation-card">
+        <svg class="frame-corner frame-corner--tl" viewBox="0 0 44 44" aria-hidden="true"><g fill="none" stroke="#c9b08a" stroke-width="1.1"><path d="M6 26 L6 6 L26 6"/><path d="M12 32 L12 12 L32 12"/><path d="M18 38 L18 18 L38 18"/></g><rect x="27" y="27" width="4" height="4" fill="#c9b08a" transform="rotate(45 29 29)"/></svg>
+        <svg class="frame-corner frame-corner--tr" viewBox="0 0 44 44" aria-hidden="true"><g fill="none" stroke="#c9b08a" stroke-width="1.1"><path d="M6 26 L6 6 L26 6"/><path d="M12 32 L12 12 L32 12"/><path d="M18 38 L18 18 L38 18"/></g><rect x="27" y="27" width="4" height="4" fill="#c9b08a" transform="rotate(45 29 29)"/></svg>
+        <svg class="frame-corner frame-corner--br" viewBox="0 0 44 44" aria-hidden="true"><g fill="none" stroke="#c9b08a" stroke-width="1.1"><path d="M6 26 L6 6 L26 6"/><path d="M12 32 L12 12 L32 12"/><path d="M18 38 L18 18 L38 18"/></g><rect x="27" y="27" width="4" height="4" fill="#c9b08a" transform="rotate(45 29 29)"/></svg>
+        <svg class="frame-corner frame-corner--bl" viewBox="0 0 44 44" aria-hidden="true"><g fill="none" stroke="#c9b08a" stroke-width="1.1"><path d="M6 26 L6 6 L26 6"/><path d="M12 32 L12 12 L32 12"/><path d="M18 38 L18 18 L38 18"/></g><rect x="27" y="27" width="4" height="4" fill="#c9b08a" transform="rotate(45 29 29)"/></svg>
         <div class="ornament"></div>
 
         <!-- 新人姓名 许博仁 & 蔡银坤 -->
