@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>许博仁 & 蔡银坤 · 婚礼邀请</title>
-    <meta name="description" content="许博仁 & 蔡银坤 诚邀您参加我们的婚礼 — 2026年10月3日 · 河北省保定市易县好年景大酒店">
+    <meta name="description" content="许博仁 & 蔡银坤 诚邀您参加我们的婚礼 — 2026年10月3日 · 河北省保定市易县好年景烤鸭店">
     <meta name="theme-color" content="#f9ecd9">
     <!-- favicon（内联，无需图片文件） -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
     <!-- 分享到微信 / QQ / iMessage 时的卡片信息 -->
     <meta property="og:title" content="许博仁 & 蔡银坤 · 婚礼邀请">
-    <meta property="og:description" content="2026.10.03 · 河北省保定市易县好年景大酒店 · 恭候您的光临">
+    <meta property="og:description" content="2026.10.03 · 河北省保定市易县好年景烤鸭店 · 恭候您的光临">
     <meta property="og:image" content="https://bonn12138.github.io/wedding/assets/images/main.jpg">
     <!-- 古风字体：汇文明朝体（自托管子集，仅加载页面用到的字） -->
     <link rel="stylesheet" href="assets/fonts/huiwen-mincho/index.css">
@@ -797,6 +797,113 @@
             cursor: zoom-in;
         }
 
+        /* 地图选择层 */
+        .map-picker {
+            position: fixed;
+            inset: 0;
+            z-index: 960;
+            background: rgba(24, 20, 14, 0.55);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .map-picker.show {
+            display: flex;
+            animation: mp-in 0.25s ease;
+        }
+
+        @keyframes mp-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .map-picker-panel {
+            background: #fffcf5;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 22px 22px 0 0;
+            padding: 26px 22px 20px;
+            text-align: center;
+            animation: mp-up 0.3s ease;
+        }
+
+        @keyframes mp-up {
+            from { transform: translateY(40px); }
+            to { transform: none; }
+        }
+
+        .map-picker-title {
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            color: #6d5c42;
+            margin-bottom: 20px;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+        }
+
+        .map-picker-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .map-picker-list a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 13px 18px;
+            border: 1px solid #e6d9c2;
+            border-radius: 14px;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.7);
+            transition: background 0.2s ease;
+        }
+
+        .map-picker-list a:hover {
+            background: #f7efdf;
+        }
+
+        .map-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .map-amap { background: #0095ff; }
+        .map-qq   { background: #12c2a3; }
+        .map-baidu { background: #3385ff; }
+
+        .map-name {
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            color: #3d3226;
+        }
+
+        .map-picker-cancel {
+            margin-top: 14px;
+            width: 100%;
+            padding: 11px;
+            border: none;
+            border-radius: 14px;
+            background: transparent;
+            color: #a08a68;
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .map-picker-cancel:hover {
+            background: rgba(160, 138, 104, 0.08);
+        }
+
         /* 响应式 — 姓名字号已由 clamp 自适应，此处不再覆盖 */
         @media (max-width: 480px) {
             .invitation-card {
@@ -928,7 +1035,7 @@
         <div class="details">
             <div class="detail-item">
                 <span class="detail-label">地点</span>
-                <span class="detail-value location-highlight">河北省保定市易县好年景大酒店</span>
+                <span class="detail-value location-highlight">河北省保定市易县好年景烤鸭店</span>
             </div>
             <div class="detail-item">
                 <span class="detail-label">时间</span>
@@ -938,7 +1045,7 @@
 
         <!-- 地址卡：复制地址 + 一键导航 -->
         <div class="venue-card">
-            <div class="venue-name">好年景大酒店</div>
+            <div class="venue-name">好年景烤鸭店</div>
             <div class="venue-addr" id="venueAddr">河北省保定市易县</div>
             <div class="venue-actions">
                 <button class="venue-btn" id="copyAddrBtn" type="button">
@@ -1000,6 +1107,28 @@
         <img id="lbImg" src="" alt="">
         <div class="lightbox-caption" id="lbCaption"></div>
         <button class="lightbox-nav lightbox-next" id="lbNext" type="button" aria-label="下一张">›</button>
+    </div>
+
+    <!-- 地图选择层：高德 / 腾讯 / 百度 -->
+    <div class="map-picker" id="mapPicker" role="dialog" aria-label="选择地图">
+        <div class="map-picker-panel">
+            <div class="map-picker-title">选择地图导航</div>
+            <div class="map-picker-list">
+                <a data-map="amap" href="#" target="_blank" rel="noopener">
+                    <span class="map-icon map-amap">高</span>
+                    <span class="map-name">高德地图</span>
+                </a>
+                <a data-map="qq" href="#" target="_blank" rel="noopener">
+                    <span class="map-icon map-qq">腾</span>
+                    <span class="map-name">腾讯地图</span>
+                </a>
+                <a data-map="baidu" href="#" target="_blank" rel="noopener">
+                    <span class="map-icon map-baidu">百</span>
+                    <span class="map-name">百度地图</span>
+                </a>
+            </div>
+            <button class="map-picker-cancel" id="mapPickerClose" type="button">取消</button>
+        </div>
     </div>
 
     <audio id="bgMusic" loop preload="auto" autoplay style="display: none;">
@@ -1332,31 +1461,33 @@
                 { src: 'assets/images/photo4.jpg', cap: '四' }
             ];
             let lbIndex = 0;
-            // 仅收录实际加载成功的照片（onload 前浏览器无缓存时 complete 为 false，稍后点击时再查一次）
-            const lbList = photoSources.filter(p => {
-                const probe = new Image();
-                probe.src = p.src;
-                return probe.complete && probe.naturalWidth > 0;
-            });
+            // 灯箱始终使用完整列表；未加载成功（无 has-photo）的照片在翻页时自动跳过。
+            // 是否可显示以页面上 img 的 onload（has-photo 类）为准，不做缓存探测。
+            const lbList = photoSources;
 
-            function lbShow(i) {
+            function lbAvailable(i) {
+                const el = document.querySelector('[data-lb="' + i + '"]');
+                return el && el.classList.contains('has-photo');
+            }
+
+            function lbShow(start) {
                 if (!lbList.length) return;
-                lbIndex = (i + lbList.length) % lbList.length;
-                lbImg.src = lbList[lbIndex].src;
-                lbCaption.textContent = lbList[lbIndex].cap;
+                // 从 start 起向后找最近一张实际存在的照片（循环查找；start 先取模归一化）
+                let i = ((start % lbList.length) + lbList.length) % lbList.length;
+                for (let n = 0; n < lbList.length; n++) {
+                    if (lbAvailable(i)) break;
+                    i = (i + 1) % lbList.length;
+                }
+                lbIndex = i;
+                lbImg.src = lbList[i].src;
+                lbCaption.textContent = lbList[i].cap;
                 lb.classList.add('show');
             }
             function lbHide() { lb.classList.remove('show'); }
-
             document.querySelectorAll('[data-lb]').forEach(el => {
                 el.addEventListener('click', () => {
                     if (!el.classList.contains('has-photo')) return;
-                    // has-photo 说明该图已 onload 成功，直接按 src 匹配
-                    const src = el.querySelector('img').getAttribute('src');
-                    const inList = lbList.some(p => p.src === src);
-                    if (!inList) lbList.push(photoSources.find(p => p.src === src));
-                    const idx = lbList.findIndex(p => p.src === src);
-                    lbShow(idx >= 0 ? idx : 0);
+                    lbShow(Number(el.dataset.lb));   // data-lb 即完整列表的索引
                 });
             });
             document.getElementById('lbClose').addEventListener('click', lbHide);
@@ -1371,13 +1502,39 @@
             });
 
             // ----- 地址卡：复制地址 + 地图导航 -----
-            const VENUE_ADDR = '河北省保定市易县好年景大酒店';
+            const VENUE_ADDR = '河北省保定市易县好年景烤鸭店 · 朝阳西路28号';
+            // 酒店真实坐标（GCJ-02，来自高德分享链接）
+            const VENUE = { lat: 39.34814079447526, lng: 115.49771860241889, name: '好年景烤鸭店', addr: '朝阳西路28号' };
             document.getElementById('venueAddr').textContent = VENUE_ADDR;
-            // 腾讯地图网页版：search 接口必须带 region（城市）检索参数，否则报
-            // "请选择任意一种检索方式"；微信内可直接打开，未装 App 的手机走网页版
-            document.getElementById('navBtn').href =
-                'https://apis.map.qq.com/uri/v1/search?keyword=' + encodeURIComponent(VENUE_ADDR)
-                + '&region=' + encodeURIComponent('保定') + '&referer=wedding';
+
+            // 三家地图定位链接（高德/腾讯同为 GCJ-02 坐标系；百度 BD-09 需偏移换算）
+            const bdLat = VENUE.lat + 0.006;       // GCJ-02 → BD-09 近似偏移
+            const bdLng = VENUE.lng + 0.0065;
+            const NAV_LINKS = {
+                amap: 'https://uri.amap.com/marker?position=' + VENUE.lng + ',' + VENUE.lat
+                    + '&name=' + encodeURIComponent(VENUE.name) + '&src=wedding&coordinate=gaode',
+                qq: 'https://apis.map.qq.com/uri/v1/marker?marker=coord:' + VENUE.lat + ',' + VENUE.lng
+                    + ';title:' + encodeURIComponent(VENUE.name) + ';addr:' + encodeURIComponent(VENUE.addr)
+                    + '&referer=wedding',
+                baidu: 'https://api.map.baidu.com/marker?location=' + bdLat + ',' + bdLng
+                    + '&title=' + encodeURIComponent(VENUE.name) + '&content=' + encodeURIComponent(VENUE.addr)
+                    + '&coord_type=bd09ll&output=html&src=wedding'
+            };
+
+            // 点「地图导航」弹出选择层：三家地图任选
+            // 说明：微信内无法探测/唤起地图 App（scheme 被拦截），统一走网页版地图，
+            // 网页版自身会引导打开对应 App；外部浏览器点选后由 uri.amap.com 等自动唤起。
+            const mapPicker = document.getElementById('mapPicker');
+            document.getElementById('navBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                mapPicker.classList.add('show');
+            });
+            document.getElementById('mapPickerClose').addEventListener('click', () => mapPicker.classList.remove('show'));
+            mapPicker.addEventListener('click', (e) => { if (e.target === mapPicker) mapPicker.classList.remove('show'); });
+            document.querySelectorAll('[data-map]').forEach(a => {
+                a.href = NAV_LINKS[a.dataset.map];
+                a.addEventListener('click', () => setTimeout(() => mapPicker.classList.remove('show'), 300));
+            });
 
             const copyBtn = document.getElementById('copyAddrBtn');
             copyBtn.addEventListener('click', async () => {
