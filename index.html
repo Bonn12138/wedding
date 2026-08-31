@@ -1373,9 +1373,11 @@
             // ----- 地址卡：复制地址 + 地图导航 -----
             const VENUE_ADDR = '河北省保定市易县好年景大酒店';
             document.getElementById('venueAddr').textContent = VENUE_ADDR;
-            // 腾讯地图网页版：微信内可直接打开，浏览器会跳 App 或网页
+            // 腾讯地图网页版：search 接口必须带 region（城市）检索参数，否则报
+            // "请选择任意一种检索方式"；微信内可直接打开，未装 App 的手机走网页版
             document.getElementById('navBtn').href =
-                'https://apis.map.qq.com/uri/v1/search?keyword=' + encodeURIComponent(VENUE_ADDR) + '&referer=wedding';
+                'https://apis.map.qq.com/uri/v1/search?keyword=' + encodeURIComponent(VENUE_ADDR)
+                + '&region=' + encodeURIComponent('保定') + '&referer=wedding';
 
             const copyBtn = document.getElementById('copyAddrBtn');
             copyBtn.addEventListener('click', async () => {
