@@ -272,7 +272,7 @@
             font-family: 'Huiwen Mincho', 'Noto Serif SC', 'Songti SC', serif;
         }
 
-        /* 右上角背景音乐浮动按钮 */
+        /* 右上角背景音乐浮动按钮 — 封面开启后再浮现 */
         .music-btn {
             position: fixed;
             top: 18px;
@@ -288,11 +288,20 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 100;
+            z-index: 850;              /* 高于花瓣层(800)，低于灯箱(950) */
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
-            transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            opacity: 0;
+            visibility: hidden;
+            /* 开启封面后延迟浮现（等封面淡出完成），延迟只作用于 opacity/visibility */
+            transition: opacity 0.5s ease 0.9s, visibility 0.5s ease 0.9s,
+                        background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+        }
+
+        body.cover-opened .music-btn {
+            opacity: 1;
+            visibility: visible;
         }
 
         .music-btn:hover {
@@ -466,6 +475,328 @@
             font-family: 'Huiwen Mincho', 'Noto Serif SC', 'Songti SC', serif;
         }
 
+        /* ===== 中式古典元素 ===== */
+
+        /* 开屏封面 — 卷轴信封 */
+        .cover-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(160deg, #f7eedd 0%, #f3e5cc 50%, #eedbbd 100%);
+            transition: opacity 0.9s ease, visibility 0.9s;
+        }
+
+        .cover-screen.opened {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .cover-inner {
+            text-align: center;
+            padding: 48px 32px;
+            max-width: 400px;
+            width: 100%;
+            animation: cover-in 1.4s ease both;
+        }
+
+        @keyframes cover-in {
+            from { opacity: 0; transform: translateY(26px) scale(0.97); }
+            to { opacity: 1; transform: none; }
+        }
+
+        .cover-frame {
+            border: 1px solid #c9b08a;
+            outline: 1px solid #c9b08a;
+            outline-offset: 5px;
+            padding: 44px 28px;
+            background: rgba(255, 252, 245, 0.5);
+        }
+
+        .cover-kicker {
+            font-size: 0.8rem;
+            letter-spacing: 8px;
+            color: #a08a68;
+            margin-bottom: 26px;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+        }
+
+        .cover-names {
+            font-size: 2.1rem;
+            letter-spacing: 6px;
+            color: #3d3226;
+            margin-bottom: 8px;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+            white-space: nowrap;
+        }
+
+        .cover-names .amp {
+            color: #b08d5e;
+            font-size: 0.72em;
+            margin: 0 6px;
+        }
+
+        .cover-date {
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            color: #8a7658;
+            margin-top: 18px;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+        }
+
+        .cover-open-btn {
+            margin-top: 30px;
+            padding: 11px 44px;
+            background: transparent;
+            border: 1px solid #b39872;
+            color: #6d5c42;
+            font-size: 0.9rem;
+            letter-spacing: 6px;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-indent: 6px; /* 抵消 letter-spacing 让文字视觉居中 */
+        }
+
+        .cover-open-btn:hover {
+            background: rgba(179, 152, 114, 0.12);
+            letter-spacing: 8px;
+        }
+
+        .cover-seal {
+            position: absolute;
+            right: 26px;
+            bottom: 26px;
+            width: 58px;
+            height: 58px;
+            border: 2px solid #b5432f;
+            border-radius: 6px;
+            color: #b5432f;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(6deg);
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+            opacity: 0.85;
+            user-select: none;
+        }
+
+        /* 卷轴展开后的入场 */
+        .invitation-card {
+            animation: card-rise 1s ease both;
+            animation-delay: 0.15s;
+        }
+
+        .cover-screen.opened ~ main.invitation-card,
+        body.cover-opened .invitation-card {
+            animation: card-rise 1.1s cubic-bezier(0.22, 0.8, 0.36, 1) both;
+        }
+
+        @keyframes card-rise {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: none; }
+        }
+
+        /* 飘落花瓣画布 */
+        #petalsCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: 800;
+            pointer-events: none;
+            display: none;
+        }
+
+        /* 倒计时 */
+        .countdown-section {
+            margin: 26px 0 6px;
+            text-align: center;
+        }
+
+        .countdown-title {
+            font-size: 0.85rem;
+            letter-spacing: 5px;
+            color: #9e8b72;
+            margin-bottom: 14px;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+        }
+
+        .countdown-grid {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .count-cell {
+            min-width: 62px;
+            padding: 10px 6px 8px;
+            background: rgba(255, 253, 248, 0.75);
+            border: 1px solid #e3d5bd;
+            border-radius: 10px;
+        }
+
+        .count-num {
+            font-size: 1.55rem;
+            font-weight: 600;
+            color: #6d5a40;
+            line-height: 1.15;
+            font-variant-numeric: tabular-nums;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+        }
+
+        .count-label {
+            font-size: 0.68rem;
+            letter-spacing: 3px;
+            color: #ab9878;
+            margin-top: 3px;
+        }
+
+        /* 地址卡 + 导航 */
+        .venue-card {
+            margin: 6px 0 26px;
+            padding: 20px 22px;
+            border: 1px solid #e6d9c2;
+            border-radius: 14px;
+            background: rgba(255, 253, 248, 0.6);
+            text-align: center;
+        }
+
+        .venue-name {
+            font-size: 1.05rem;
+            letter-spacing: 3px;
+            color: #4a3f2f;
+            margin-bottom: 6px;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+        }
+
+        .venue-addr {
+            font-size: 0.82rem;
+            color: #8f7d63;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+
+        .venue-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .venue-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 20px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            border-radius: 30px;
+            border: 1px solid #c9b08a;
+            background: rgba(255, 252, 246, 0.9);
+            color: #6d5c42;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+            font-family: inherit;
+        }
+
+        .venue-btn:hover {
+            background: #f7efdf;
+            border-color: #b39872;
+        }
+
+        .venue-btn:active {
+            transform: scale(0.96);
+        }
+
+        .venue-btn svg {
+            width: 13px;
+            height: 13px;
+            fill: #a08a68;
+        }
+
+        /* 照片灯箱 */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 950;
+            background: rgba(24, 20, 14, 0.92);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .lightbox.show {
+            display: flex;
+            animation: lb-in 0.3s ease;
+        }
+
+        @keyframes lb-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 76vh;
+            border-radius: 8px;
+            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.5);
+            object-fit: contain;
+        }
+
+        .lightbox-caption {
+            color: #cbb994;
+            font-size: 0.82rem;
+            letter-spacing: 3px;
+            margin-top: 16px;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(203, 185, 148, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+            color: #d8c8a4;
+            font-size: 1.15rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid rgba(203, 185, 148, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+            color: #d8c8a4;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .lightbox-prev { left: 14px; }
+        .lightbox-next { right: 14px; }
+
+        /* 可点击照片的提示光标 */
+        .main-photo.has-photo,
+        .secondary-photo.has-photo {
+            cursor: zoom-in;
+        }
+
         /* 响应式 — 姓名字号已由 clamp 自适应，此处不再覆盖 */
         @media (max-width: 480px) {
             .invitation-card {
@@ -513,6 +844,22 @@
     </style>
 </head>
 <body>
+    <!-- 开屏封面：卷轴信封，点击「开启」进入请柬并播放音乐 -->
+    <div class="cover-screen" id="coverScreen">
+        <div class="cover-inner">
+            <div class="cover-frame">
+                <div class="cover-kicker">谨 具 帖 恭 请</div>
+                <div class="cover-names">蔡银坤<span class="amp">&</span>许博仁</div>
+                <div class="cover-date">丙午年 · 八月廿三</div>
+                <button class="cover-open-btn" id="coverOpenBtn" type="button">开 启 请 柬</button>
+            </div>
+        </div>
+        <div class="cover-seal">囍</div>
+    </div>
+
+    <!-- 飘落花瓣画布 -->
+    <canvas id="petalsCanvas"></canvas>
+
     <main class="invitation-card">
         <div class="ornament"></div>
 
@@ -530,8 +877,8 @@
         </div>
 
         <!-- 照片区域：把照片放入 assets/images/ 即自动显示，无图时显示占位样式 -->
-        <div class="photo-gallery">
-            <div class="main-photo">
+        <div class="photo-gallery" id="photoGallery">
+            <div class="main-photo" data-lb="0">
                 <img src="assets/images/main.jpg" alt="许博仁与蔡银坤的婚纱照"
                      onload="this.parentElement.classList.add('has-photo')" onerror="this.remove()">
                 <i>🖼️</i>
@@ -539,30 +886,41 @@
                 <span>放入 assets/images/main.jpg（建议竖版 800×1200）</span>
             </div>
             <div class="secondary-photos">
-                <div class="secondary-photo">
+                <div class="secondary-photo" data-lb="1">
                     <img src="assets/images/photo1.jpg" alt="婚纱照一"
                          onload="this.parentElement.classList.add('has-photo')" onerror="this.remove()">
                     <i>🖼️</i>
                     <span>照片1</span>
                 </div>
-                <div class="secondary-photo">
+                <div class="secondary-photo" data-lb="2">
                     <img src="assets/images/photo2.jpg" alt="婚纱照二"
                          onload="this.parentElement.classList.add('has-photo')" onerror="this.remove()">
                     <i>🖼️</i>
                     <span>照片2</span>
                 </div>
-                <div class="secondary-photo">
+                <div class="secondary-photo" data-lb="3">
                     <img src="assets/images/photo3.jpg" alt="婚纱照三"
                          onload="this.parentElement.classList.add('has-photo')" onerror="this.remove()">
                     <i>🖼️</i>
                     <span>照片3</span>
                 </div>
-                <div class="secondary-photo">
+                <div class="secondary-photo" data-lb="4">
                     <img src="assets/images/photo4.jpg" alt="婚纱照四"
                          onload="this.parentElement.classList.add('has-photo')" onerror="this.remove()">
                     <i>🖼️</i>
                     <span>照片4</span>
                 </div>
+            </div>
+        </div>
+
+        <!-- 婚礼倒计时 -->
+        <div class="countdown-section" id="countdownSection">
+            <div class="countdown-title">距 花 期 还 有</div>
+            <div class="countdown-grid">
+                <div class="count-cell"><div class="count-num" id="cdDays">--</div><div class="count-label">天</div></div>
+                <div class="count-cell"><div class="count-num" id="cdHours">--</div><div class="count-label">时</div></div>
+                <div class="count-cell"><div class="count-num" id="cdMins">--</div><div class="count-label">分</div></div>
+                <div class="count-cell"><div class="count-num" id="cdSecs">--</div><div class="count-label">秒</div></div>
             </div>
         </div>
 
@@ -575,6 +933,22 @@
             <div class="detail-item">
                 <span class="detail-label">时间</span>
                 <span class="detail-value">2026年10月3日 · 星期六</span>
+            </div>
+        </div>
+
+        <!-- 地址卡：复制地址 + 一键导航 -->
+        <div class="venue-card">
+            <div class="venue-name">好年景大酒店</div>
+            <div class="venue-addr" id="venueAddr">河北省保定市易县</div>
+            <div class="venue-actions">
+                <button class="venue-btn" id="copyAddrBtn" type="button">
+                    <svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>
+                    复制地址
+                </button>
+                <a class="venue-btn" id="navBtn" href="#" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 14.5 9 2.5 2.5 0 0 1 12 11.5z"/></svg>
+                    地图导航
+                </a>
             </div>
         </div>
 
@@ -618,6 +992,15 @@
 
         <div class="footer-note">· 诚挚邀请 ·</div>
     </main>
+
+    <!-- 照片灯箱 -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-label="照片浏览">
+        <button class="lightbox-close" id="lbClose" type="button" aria-label="关闭">×</button>
+        <button class="lightbox-nav lightbox-prev" id="lbPrev" type="button" aria-label="上一张">‹</button>
+        <img id="lbImg" src="" alt="">
+        <div class="lightbox-caption" id="lbCaption"></div>
+        <button class="lightbox-nav lightbox-next" id="lbNext" type="button" aria-label="下一张">›</button>
+    </div>
 
     <audio id="bgMusic" loop preload="auto" autoplay style="display: none;">
         <source src="assets/music/bgm.mp3" type="audio/mpeg">
@@ -749,10 +1132,15 @@
             const bgMusic = document.getElementById('bgMusic');
             let isPlaying = false;
 
-            // 若 assets/music/bgm.mp3 尚未放置，隐藏音乐按钮
-            fetch('assets/music/bgm.mp3', { method: 'HEAD' })
-                .then(res => { if (!res.ok) musicBtn.style.display = 'none'; })
-                .catch(() => { musicBtn.style.display = 'none'; });
+            // 若 bgm.mp3 真实加载失败（如未放置），由 <audio> 的 error 事件隐藏按钮。
+            // 不用 fetch HEAD 探测：EdgeOne 预览链接的令牌不随 fetch 转发，会误判 401。
+            function hideMusicBtn() {
+                musicBtn.style.display = 'none';
+            }
+            bgMusic.addEventListener('error', hideMusicBtn);
+            // source 元素的错误不会冒泡到 audio，需要挂在 source 上
+            const bgSource = bgMusic.querySelector('source');
+            if (bgSource) bgSource.addEventListener('error', hideMusicBtn);
 
             function setPlayingUI(playing) {
                 if (playing) {
@@ -823,6 +1211,190 @@
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     toggleMusic();
+                }
+            });
+
+            // ----- 开屏封面：点击开启 → 展开请柬 + 启动音乐 + 花瓣 -----
+            const coverScreen = document.getElementById('coverScreen');
+            const coverOpenBtn = document.getElementById('coverOpenBtn');
+            const petalsCanvas = document.getElementById('petalsCanvas');
+
+            let petalsStarted = false;
+
+            function startPetals() {
+                if (petalsStarted) return;
+                petalsStarted = true;
+                petalsCanvas.style.display = 'block';
+                const ctx = petalsCanvas.getContext('2d');
+                let W, H;
+                const PETAL_COUNT = 16;   // 数量克制，避免喧宾夺主
+
+                function resize() {
+                    W = petalsCanvas.width = window.innerWidth;
+                    H = petalsCanvas.height = window.innerHeight;
+                }
+                resize();
+                window.addEventListener('resize', resize);
+
+                // 花瓣：椭圆 + 旋转 + 摇摆飘落
+                const petals = [];
+                for (let i = 0; i < PETAL_COUNT; i++) {
+                    petals.push({
+                        x: Math.random() * window.innerWidth,
+                        y: Math.random() * -window.innerHeight,
+                        size: 6 + Math.random() * 7,
+                        speed: 0.4 + Math.random() * 0.8,
+                        sway: 0.5 + Math.random() * 1.2,
+                        swaySpeed: 0.008 + Math.random() * 0.012,
+                        phase: Math.random() * Math.PI * 2,
+                        rot: Math.random() * Math.PI * 2,
+                        rotSpeed: (Math.random() - 0.5) * 0.02,
+                        hue: 8 + Math.random() * 18,        // 粉白到淡粉
+                        alpha: 0.5 + Math.random() * 0.35
+                    });
+                }
+
+                function draw() {
+                    ctx.clearRect(0, 0, W, H);
+                    for (const p of petals) {
+                        p.phase += p.swaySpeed;
+                        p.rot += p.rotSpeed;
+                        p.y += p.speed;
+                        p.x += Math.sin(p.phase) * p.sway * 0.4;
+                        if (p.y > H + 20) {           // 落出底部回到顶部
+                            p.y = -20;
+                            p.x = Math.random() * W;
+                        }
+                        ctx.save();
+                        ctx.translate(p.x, p.y);
+                        ctx.rotate(p.rot);
+                        ctx.globalAlpha = p.alpha;
+                        // 花瓣形状：两段贝塞尔构成的叶片
+                        ctx.beginPath();
+                        ctx.moveTo(0, -p.size);
+                        ctx.bezierCurveTo(p.size * 0.9, -p.size * 0.5, p.size * 0.7, p.size * 0.6, 0, p.size);
+                        ctx.bezierCurveTo(-p.size * 0.7, p.size * 0.6, -p.size * 0.9, -p.size * 0.5, 0, -p.size);
+                        ctx.fillStyle = `hsl(${p.hue}, 70%, 88%)`;
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                    requestAnimationFrame(draw);
+                }
+                draw();
+            }
+
+            function openCover() {
+                coverScreen.classList.add('opened');
+                document.body.classList.add('cover-opened');
+                startMusic();          // 用户手势内启动音乐，绕过自动播放限制
+                startPetals();
+            }
+            coverOpenBtn.addEventListener('click', openCover);
+
+            // ----- 婚礼倒计时（2026-10-03 12:00 正午，按本地时区） -----
+            const WEDDING_TS = new Date('2026-10-03T12:00:00+08:00').getTime();
+            const cdEls = {
+                d: document.getElementById('cdDays'),
+                h: document.getElementById('cdHours'),
+                m: document.getElementById('cdMins'),
+                s: document.getElementById('cdSecs')
+            };
+            const pad = n => String(n).padStart(2, '0');
+
+            function tickCountdown() {
+                let diff = WEDDING_TS - Date.now();
+                const sec = Math.floor(diff / 1000);
+                if (sec <= 0) {
+                    cdEls.d.textContent = '囍';
+                    cdEls.h.textContent = '';
+                    cdEls.m.textContent = '';
+                    cdEls.s.textContent = '';
+                    document.querySelector('.countdown-title').textContent = '今 朝 花 好 月 圆';
+                    return;
+                }
+                cdEls.d.textContent = Math.floor(sec / 86400);
+                cdEls.h.textContent = pad(Math.floor(sec / 3600) % 24);
+                cdEls.m.textContent = pad(Math.floor(sec / 60) % 60);
+                cdEls.s.textContent = pad(sec % 60);
+                setTimeout(tickCountdown, 1000 - (Date.now() % 1000));
+            }
+            tickCountdown();
+
+            // ----- 照片灯箱 -----
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lbImg');
+            const lbCaption = document.getElementById('lbCaption');
+            const photoSources = [
+                { src: 'assets/images/main.jpg', cap: '主婚纱照' },
+                { src: 'assets/images/photo1.jpg', cap: '一' },
+                { src: 'assets/images/photo2.jpg', cap: '二' },
+                { src: 'assets/images/photo3.jpg', cap: '三' },
+                { src: 'assets/images/photo4.jpg', cap: '四' }
+            ];
+            let lbIndex = 0;
+            // 仅收录实际加载成功的照片（onload 前浏览器无缓存时 complete 为 false，稍后点击时再查一次）
+            const lbList = photoSources.filter(p => {
+                const probe = new Image();
+                probe.src = p.src;
+                return probe.complete && probe.naturalWidth > 0;
+            });
+
+            function lbShow(i) {
+                if (!lbList.length) return;
+                lbIndex = (i + lbList.length) % lbList.length;
+                lbImg.src = lbList[lbIndex].src;
+                lbCaption.textContent = lbList[lbIndex].cap;
+                lb.classList.add('show');
+            }
+            function lbHide() { lb.classList.remove('show'); }
+
+            document.querySelectorAll('[data-lb]').forEach(el => {
+                el.addEventListener('click', () => {
+                    if (!el.classList.contains('has-photo')) return;
+                    // has-photo 说明该图已 onload 成功，直接按 src 匹配
+                    const src = el.querySelector('img').getAttribute('src');
+                    const inList = lbList.some(p => p.src === src);
+                    if (!inList) lbList.push(photoSources.find(p => p.src === src));
+                    const idx = lbList.findIndex(p => p.src === src);
+                    lbShow(idx >= 0 ? idx : 0);
+                });
+            });
+            document.getElementById('lbClose').addEventListener('click', lbHide);
+            document.getElementById('lbPrev').addEventListener('click', () => lbShow(lbIndex - 1));
+            document.getElementById('lbNext').addEventListener('click', () => lbShow(lbIndex + 1));
+            lb.addEventListener('click', (e) => { if (e.target === lb) lbHide(); });
+            document.addEventListener('keydown', (e) => {
+                if (!lb.classList.contains('show')) return;
+                if (e.key === 'Escape') lbHide();
+                if (e.key === 'ArrowLeft') lbShow(lbIndex - 1);
+                if (e.key === 'ArrowRight') lbShow(lbIndex + 1);
+            });
+
+            // ----- 地址卡：复制地址 + 地图导航 -----
+            const VENUE_ADDR = '河北省保定市易县好年景大酒店';
+            document.getElementById('venueAddr').textContent = VENUE_ADDR;
+            // 腾讯地图网页版：微信内可直接打开，浏览器会跳 App 或网页
+            document.getElementById('navBtn').href =
+                'https://apis.map.qq.com/uri/v1/search?keyword=' + encodeURIComponent(VENUE_ADDR) + '&referer=wedding';
+
+            const copyBtn = document.getElementById('copyAddrBtn');
+            copyBtn.addEventListener('click', async () => {
+                const done = () => {
+                    copyBtn.textContent = '已复制 ✓';
+                    setTimeout(() => { copyBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg> 复制地址'; }, 1600);
+                };
+                try {
+                    await navigator.clipboard.writeText(VENUE_ADDR);
+                    done();
+                } catch (e) {
+                    // 旧 WebView 降级：execCommand
+                    const ta = document.createElement('textarea');
+                    ta.value = VENUE_ADDR;
+                    ta.style.cssText = 'position:fixed;opacity:0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    try { document.execCommand('copy'); done(); } catch (e2) {}
+                    ta.remove();
                 }
             });
         })();
