@@ -253,30 +253,34 @@
             margin-top: 26px;
         }
 
+        /* 姓名行同样随屏收缩：最窄 360px 视口（卡片内宽约 316px）也不折行 */
         .parents-row {
-            font-size: 1.75rem;
+            font-size: clamp(1.15rem, 6.5vw, 1.75rem);
             font-weight: 700;
             letter-spacing: 3px;
             color: #5d4e3a;
             line-height: 1.9;
+            white-space: nowrap;
             font-family: 'Huiwen Mincho', 'Noto Serif SC', 'Songti SC', serif;
         }
 
         .parents-row em {
             font-style: normal;
-            font-size: 1.25rem;
+            font-size: clamp(0.85rem, 4vw, 1.25rem);
             font-weight: 400;
             letter-spacing: 2px;
             color: #ab9878;
             margin-right: 8px;
         }
 
+        /* 副题字距较大，字号随屏收缩（clamp）防止窄屏串行；空白不换行 */
         .parents-sub {
             margin-top: 8px;
-            font-size: 1.25rem;
+            font-size: clamp(0.85rem, 3.4vw, 1.25rem);
             letter-spacing: 5px;
             color: #ab9878;
             font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+            white-space: nowrap;
         }
 
         /* 恭候光临 — 独立香槟色居中区块 */
@@ -1157,7 +1161,7 @@
         <!-- 双方父母敬邀：传统请柬以父母具名（女方父母在前、男方父母在后） -->
         <div class="parents-note">
         <!--   <div class="parents-row"><em>女方父母</em>蔡利泉 · 许春燕</div> -->
-            <div class="parents-row"><em>男方父母</em>许俊生 · 许志英</div>
+        <!--   <div class="parents-row"><em>男方父母</em>许俊生 · 许志英</div> -->
             <div class="parents-sub">敬 备 喜 宴 · 恭 迎 嘉 宾</div>
         </div>
 
