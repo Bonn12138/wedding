@@ -111,10 +111,9 @@
         .couple-names span {
             display: inline-block;
             margin: 0 clamp(3px, 1.5vw, 8px);
-            font-weight: 300;
+            font-weight: 400;
             color: #c2a57a;
-            font-size: 0.73em;
-            transform: translateY(-2px);
+            font-size: 0.6em;
         }
 
         /* 日期 */
@@ -250,20 +249,23 @@
 
         /* 双方父母敬邀 — 女方父母在前、男方父母在后，立于恭候语之上 */
         .parents-note {
-            margin-bottom: 6px;
+            margin-bottom: 16px;
+            margin-top: 26px;
         }
 
         .parents-row {
-            font-size: 0.92rem;
+            font-size: 1.75rem;
+            font-weight: 700;
             letter-spacing: 3px;
-            color: #7f6e5a;
+            color: #5d4e3a;
             line-height: 1.9;
             font-family: 'Huiwen Mincho', 'Noto Serif SC', 'Songti SC', serif;
         }
 
         .parents-row em {
             font-style: normal;
-            font-size: 0.72rem;
+            font-size: 1.25rem;
+            font-weight: 400;
             letter-spacing: 2px;
             color: #ab9878;
             margin-right: 8px;
@@ -271,7 +273,7 @@
 
         .parents-sub {
             margin-top: 8px;
-            font-size: 0.78rem;
+            font-size: 1.25rem;
             letter-spacing: 5px;
             color: #ab9878;
             font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
@@ -351,7 +353,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* 区块分隔细线 — 照片墙 / 倒计时 / 地址卡之间通用 */
+        /* 区块分隔细线 — 照片墙 / 倒计时 / 地址卡 / 回执之间通用 */
         .divider-light {
             width: 70px;
             height: 1.5px;
@@ -486,6 +488,39 @@
             text-align: center;
         }
 
+        /* 内页朱红名章 — 与封面囍印呼应，钤于结尾；
+           2×2 方印布局（篆印常见的四字排布），横向排版避免竖排+字距叠加产生的偏斜 */
+        .footer-seal {
+            display: grid;
+            grid-template-columns: repeat(2, auto);
+            justify-content: center;
+            align-content: center;
+            gap: 4px 10px;
+            width: 74px;
+            height: 74px;
+            margin: 18px auto 10px;
+            padding: 6px;
+            border: 1.5px solid #b5432f;
+            border-radius: 5px;
+            color: #b5432f;
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1;
+            opacity: 0.85;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+            user-select: none;
+        }
+
+        /* 传统印章读序：右上 → 右下 → 左上 → 左下，用列反转实现 */
+        .footer-seal span {
+            display: block;
+            text-align: center;
+        }
+        .footer-seal .s1 { grid-column: 2; grid-row: 1; }
+        .footer-seal .s2 { grid-column: 2; grid-row: 2; }
+        .footer-seal .s3 { grid-column: 1; grid-row: 1; }
+        .footer-seal .s4 { grid-column: 1; grid-row: 2; }
+
         .footer-note {
             margin-top: 26px;
             font-size: 0.85rem;
@@ -565,18 +600,20 @@
         }
 
         .cover-names {
+            writing-mode: vertical-rl;      /* 竖排右起：先新娘后新郎 */
             font-size: 2.1rem;
-            letter-spacing: 6px;
+            letter-spacing: 10px;
             color: #3d3226;
-            margin-bottom: 8px;
+            margin: 6px auto 2px;
             font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
-            white-space: nowrap;
+            line-height: 1.55;
+            height: 210px;
         }
 
         .cover-names .amp {
             color: #b08d5e;
-            font-size: 0.72em;
-            margin: 0 6px;
+            font-size: 0.42em;
+            margin: 14px 0;
         }
 
         .cover-date {
@@ -1015,7 +1052,7 @@
                 <svg class="frame-corner frame-corner--bl" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
                 <div class="cover-kicker">谨 具 帖 恭 请</div>
                 <div class="cover-poem">桃之夭夭 灼灼其华 之子于归 宜其室家</div>
-                <div class="cover-names">蔡银坤<span class="amp">&</span>许博仁</div>
+                <div class="cover-names">蔡银坤<span class="amp">暨</span>许博仁</div>
                 <div class="cover-date">丙午年 · 八月廿三</div>
                 <button class="cover-open-btn" id="coverOpenBtn" type="button">开 启 请 柬</button>
             </div>
@@ -1034,9 +1071,9 @@
         <svg class="frame-corner frame-corner--bl" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
         <div class="ornament"></div>
 
-        <!-- 新人姓名 许博仁 & 蔡银坤 -->
+        <!-- 新人姓名 蔡银坤 暨 许博仁 -->
         <h1 class="couple-names">
-            蔡银坤 <span>&</span> 许博仁 
+            蔡银坤 <span>暨</span> 许博仁
         </h1>
 
         <!-- 日期 2026.10.03 及农历 -->
@@ -1119,13 +1156,13 @@
 
         <!-- 双方父母敬邀：传统请柬以父母具名（女方父母在前、男方父母在后） -->
         <div class="parents-note">
-            <div class="parents-row"><em>女方父母</em>蔡利泉 · 许春燕</div>
+        <!--   <div class="parents-row"><em>女方父母</em>蔡利泉 · 许春燕</div> -->
             <div class="parents-row"><em>男方父母</em>许俊生 · 许志英</div>
             <div class="parents-sub">敬 备 喜 宴 · 恭 迎 嘉 宾</div>
         </div>
 
         <!-- 恭候光临 — 香槟色居中独立行 -->
-        <div class="greeting-line">恭 候 您 的 光 临</div>
+        <div class="greeting-line"></div>
 
         <!-- 背景音乐：放入 assets/music/bgm.mp3 后右上角自动出现音乐图标 -->
         <div class="music-btn" id="musicBtn" role="button" aria-label="背景音乐开关" tabindex="0" aria-pressed="false">
@@ -1162,6 +1199,7 @@
             <div id="confirmationMessage" class="submission-message"></div>
         </div>
 
+        <div class="footer-seal" role="img" aria-label="印章：百年好合"><span class="s1">百</span><span class="s2">年</span><span class="s3">好</span><span class="s4">合</span></div>
         <div class="footer-note">· 诚挚邀请 ·</div>
     </main>
 
