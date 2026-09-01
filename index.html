@@ -591,15 +591,13 @@
             font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
         }
 
-        /* 封面诗经引文 — 竖排右起，古典信笺的落笔 */
+        /* 封面诗经引文 — 横排双行，置于卷轴框外下方作题款 */
         .cover-poem {
-            writing-mode: vertical-rl;
             font-size: 0.78rem;
-            letter-spacing: 7px;
+            letter-spacing: 4px;
             color: #ab9878;
-            line-height: 2;
-            height: 190px;
-            margin: 4px auto 10px;
+            line-height: 1.9;
+            margin-top: 20px;
             font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
         }
 
@@ -609,6 +607,7 @@
             letter-spacing: 10px;
             color: #3d3226;
             margin: 6px auto 2px;
+            margin-top: 50px;
             font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
             line-height: 1.55;
             height: 210px;
@@ -647,10 +646,11 @@
             letter-spacing: 8px;
         }
 
+        /* 囍印 — 钤于卷轴框右下角（框内右下，引文移出框后印不再被内容顶出视野） */
         .cover-seal {
             position: absolute;
-            right: 26px;
-            bottom: 26px;
+            right: 18px;
+            bottom: 18px;
             width: 58px;
             height: 58px;
             border: 2px solid #b5432f;
@@ -665,6 +665,8 @@
             font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
             opacity: 0.85;
             user-select: none;
+            background: rgba(255, 252, 245, 0.35);
+            z-index: 2;
         }
 
         /* 卷轴展开后的入场 */
@@ -1047,12 +1049,14 @@
                 <svg class="frame-corner frame-corner--br" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
                 <svg class="frame-corner frame-corner--bl" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
                 <div class="cover-kicker">谨 具 帖 恭 请</div>
-                <div class="cover-poem">桃之夭夭 灼灼其华 之子于归 宜其室家</div>
                 <div class="cover-names">蔡银坤<span class="amp">暨</span>许博仁</div>
                 <div class="cover-date">丙午年 · 八月廿三</div>
                 <button class="cover-open-btn" id="coverOpenBtn" type="button">开 启 请 柬</button>
             </div>
+            <!-- 引文置于卷轴框外下方，作整幅封面的题款 -->
+            <div class="cover-poem">桃之夭夭 · 灼灼其华<br>之子于归 · 宜其室家</div>
         </div>
+        <!-- 囍印：绝对定位于整幅封面（含题款）的右下角 -->
         <div class="cover-seal">囍</div>
     </div>
 
