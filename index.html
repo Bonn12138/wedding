@@ -248,6 +248,35 @@
         }
 
 
+        /* 双方父母敬邀 — 女方父母在前、男方父母在后，立于恭候语之上 */
+        .parents-note {
+            margin-bottom: 6px;
+        }
+
+        .parents-row {
+            font-size: 0.92rem;
+            letter-spacing: 3px;
+            color: #7f6e5a;
+            line-height: 1.9;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', 'Songti SC', serif;
+        }
+
+        .parents-row em {
+            font-style: normal;
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            color: #ab9878;
+            margin-right: 8px;
+        }
+
+        .parents-sub {
+            margin-top: 8px;
+            font-size: 0.78rem;
+            letter-spacing: 5px;
+            color: #ab9878;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+        }
+
         /* 恭候光临 — 独立香槟色居中区块 */
         .greeting-line {
             margin: 20px 0 10px;
@@ -523,6 +552,18 @@
             font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
         }
 
+        /* 封面诗经引文 — 竖排右起，古典信笺的落笔 */
+        .cover-poem {
+            writing-mode: vertical-rl;
+            font-size: 0.78rem;
+            letter-spacing: 7px;
+            color: #ab9878;
+            line-height: 2;
+            height: 190px;
+            margin: 4px auto 10px;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+        }
+
         .cover-names {
             font-size: 2.1rem;
             letter-spacing: 6px;
@@ -677,6 +718,14 @@
             letter-spacing: 3px;
             color: #4a3f2f;
             margin-bottom: 6px;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+        }
+
+        .venue-time {
+            font-size: 0.88rem;
+            letter-spacing: 3px;
+            color: #a08a68;
+            margin-bottom: 10px;
             font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
         }
 
@@ -965,6 +1014,7 @@
                 <svg class="frame-corner frame-corner--br" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
                 <svg class="frame-corner frame-corner--bl" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
                 <div class="cover-kicker">谨 具 帖 恭 请</div>
+                <div class="cover-poem">桃之夭夭 灼灼其华 之子于归 宜其室家</div>
                 <div class="cover-names">蔡银坤<span class="amp">&</span>许博仁</div>
                 <div class="cover-date">丙午年 · 八月廿三</div>
                 <button class="cover-open-btn" id="coverOpenBtn" type="button">开 启 请 柬</button>
@@ -1053,6 +1103,7 @@
         <div class="venue-card">
             <div class="venue-title">婚 礼 地 点</div>
             <div class="venue-name">好年景烤鸭店</div>
+            <div class="venue-time">恭候 10:58 · 敬备喜宴</div>
             <div class="venue-addr" id="venueAddr">河北省保定市易县</div>
             <div class="venue-actions">
                 <button class="venue-btn" id="copyAddrBtn" type="button">
@@ -1064,6 +1115,13 @@
                     地图导航
                 </a>
             </div>
+        </div>
+
+        <!-- 双方父母敬邀：传统请柬以父母具名（女方父母在前、男方父母在后） -->
+        <div class="parents-note">
+            <div class="parents-row"><em>女方父母</em>蔡利泉 · 许春燕</div>
+            <div class="parents-row"><em>男方父母</em>许俊生 · 许志英</div>
+            <div class="parents-sub">敬 备 喜 宴 · 恭 迎 嘉 宾</div>
         </div>
 
         <!-- 恭候光临 — 香槟色居中独立行 -->
@@ -1427,8 +1485,8 @@
             }
             coverOpenBtn.addEventListener('click', openCover);
 
-            // ----- 婚礼倒计时（2026-10-03 12:00 正午，按本地时区） -----
-            const WEDDING_TS = new Date('2026-10-03T12:00:00+08:00').getTime();
+            // ----- 婚礼倒计时（2026-10-03 10:58 吉时，按本地时区） -----
+            const WEDDING_TS = new Date('2026-10-03T10:58:00+08:00').getTime();
             const cdEls = {
                 d: document.getElementById('cdDays'),
                 h: document.getElementById('cdHours'),
