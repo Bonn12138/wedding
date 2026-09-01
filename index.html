@@ -37,7 +37,7 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* 主卡片 — 半透明白，与渐变融合；金色古典双线框：外线 + 内线 + 四角回纹 + 边中菱珠 */
+        /* 主卡片 — 半透明白，与渐变融合；金色古典框：外线 + 四边内线（角部留白）+ 开放式回纹角饰 + 边中菱珠 */
         .invitation-card {
             position: relative;
             max-width: 600px;
@@ -45,7 +45,7 @@
             background-color: rgba(255, 255, 255, 0.78);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            border-radius: 24px;
+            border-radius: 6px;
             border: 1.5px solid #c9b08a;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.06), 0 10px 30px -8px rgba(0, 0, 0, 0.02);
             padding: 44px 36px 40px;
@@ -53,34 +53,38 @@
             transition: all 0.2s ease;
         }
 
-        /* 内圈细线：与外线平行相隔 7px，四边中点各缀一颗金色菱珠 */
+        /* 内圈细线：与外线平行相隔 7px，仅走四边中部、角部留白交给开放式角饰；
+           四边中点各缀一颗金色菱珠（叠在走线上） */
         .invitation-card::before {
             content: "";
             position: absolute;
             inset: 7px;
-            border: 1px solid rgba(201, 176, 138, 0.9);
-            border-radius: 17px;
             pointer-events: none;
             z-index: 1;
             background:
                 radial-gradient(circle, #c9b08a 0 2.5px, transparent 2.5px) 50% 0 / 12px 12px no-repeat,
                 radial-gradient(circle, #c9b08a 0 2.5px, transparent 2.5px) 50% 100% / 12px 12px no-repeat,
                 radial-gradient(circle, #c9b08a 0 2.5px, transparent 2.5px) 0 50% / 12px 12px no-repeat,
-                radial-gradient(circle, #c9b08a 0 2.5px, transparent 2.5px) 100% 50% / 12px 12px no-repeat;
+                radial-gradient(circle, #c9b08a 0 2.5px, transparent 2.5px) 100% 50% / 12px 12px no-repeat,
+                linear-gradient(rgba(201, 176, 138, 0.9), rgba(201, 176, 138, 0.9)) 47px 0 / calc(100% - 94px) 1px no-repeat,
+                linear-gradient(rgba(201, 176, 138, 0.9), rgba(201, 176, 138, 0.9)) 47px 100% / calc(100% - 94px) 1px no-repeat,
+                linear-gradient(rgba(201, 176, 138, 0.9), rgba(201, 176, 138, 0.9)) 0 47px / 1px calc(100% - 94px) no-repeat,
+                linear-gradient(rgba(201, 176, 138, 0.9), rgba(201, 176, 138, 0.9)) 100% 47px / 1px calc(100% - 94px) no-repeat;
         }
 
-        /* 四角回纹角饰 */
+        /* 四角角饰：开放式双线几何回纹（100 viewBox 等比缩放，描边 3 → 1.44px）；
+           4.6px 定位让角饰外沿走线（4.6 + 5×0.48 = 7px）与内圈走线齐平衔接 */
         .frame-corner {
             position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 48px;
+            height: 48px;
             z-index: 1;
             pointer-events: none;
         }
-        .frame-corner--tl { top: 8px; left: 8px; }
-        .frame-corner--tr { top: 8px; right: 8px; transform: rotate(90deg); }
-        .frame-corner--br { bottom: 8px; right: 8px; transform: rotate(180deg); }
-        .frame-corner--bl { bottom: 8px; left: 8px; transform: rotate(270deg); }
+        .frame-corner--tl { top: 4.6px; left: 4.6px; }
+        .frame-corner--tr { top: 4.6px; right: 4.6px; transform: rotate(90deg); }
+        .frame-corner--br { bottom: 4.6px; right: 4.6px; transform: rotate(180deg); }
+        .frame-corner--bl { bottom: 4.6px; left: 4.6px; transform: rotate(270deg); }
 
         /* 顶部装饰线 */
         .ornament {
@@ -135,10 +139,9 @@
             font-family: 'Huiwen Mincho', 'Noto Serif SC', 'Songti SC', serif;
         }
 
-        /* 照片区域 — 主次分明布局 */
+        /* 照片区域 — 主次分明布局（底部分隔线自带 26px 间距，此处不再留 margin） */
         .photo-gallery {
             width: 100%;
-            margin-bottom: 32px;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -244,50 +247,6 @@
             line-height: 1.3;
         }
 
-        /* 婚礼信息 */
-        .details {
-            text-align: left;
-            margin-bottom: 28px;
-            background: transparent;
-            padding: 8px 0;
-        }
-
-        .detail-item {
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            gap: 12px;
-            font-size: 1rem;
-            padding: 12px 0;
-            color: #3a3a3a;
-            border-bottom: 1px solid rgba(210, 190, 160, 0.3);
-        }
-
-        .detail-item:last-of-type {
-            border-bottom: none;
-        }
-
-        .detail-label {
-            font-weight: 500;
-            letter-spacing: 1px;
-            color: #9e8b72;
-            min-width: 72px;
-            text-align: right;
-            font-size: 0.9rem;
-        }
-
-        .detail-value {
-            font-weight: 400;
-            color: #2e2e2e;
-            letter-spacing: 1px;
-            text-align: left;
-            flex: 1;
-        }
-
-        .location-highlight {
-            font-weight: 500;
-            color: #1a1a1a;
-        }
 
         /* 恭候光临 — 独立香槟色居中区块 */
         .greeting-line {
@@ -302,11 +261,12 @@
             font-family: 'Huiwen Mincho', 'Noto Serif SC', 'Songti SC', serif;
         }
 
-        /* 右上角背景音乐浮动按钮 — 封面开启后再浮现 */
+        /* 右上角背景音乐浮动按钮 — 封面开启后再浮现；
+           右移 48px 避开卡片右上角的回纹角饰（角饰宽 48px + 少量间隙） */
         .music-btn {
             position: fixed;
             top: 18px;
-            right: 18px;
+            right: 66px;
             width: 42px;
             height: 42px;
             border-radius: 50%;
@@ -362,11 +322,12 @@
             to { transform: rotate(360deg); }
         }
 
+        /* 区块分隔细线 — 照片墙 / 倒计时 / 地址卡之间通用 */
         .divider-light {
             width: 70px;
             height: 1.5px;
             background: #dacbad;
-            margin: 24px auto 18px;
+            margin: 26px auto;
             border-radius: 1px;
         }
 
@@ -539,12 +500,20 @@
         }
 
         .cover-frame {
+            position: relative;
             border: 1px solid #c9b08a;
             outline: 1px solid #c9b08a;
             outline-offset: 5px;
             padding: 44px 28px;
             background: rgba(255, 252, 245, 0.5);
         }
+
+        /* 卷轴封面四角角饰：与请柬同款回纹，钉在 border 外沿上（outline 外圈不叠饰） */
+        .cover-frame .frame-corner { width: 34px; height: 34px; }
+        .cover-frame .frame-corner--tl { top: 4.2px; left: 4.2px; }
+        .cover-frame .frame-corner--tr { top: 4.2px; right: 4.2px; transform: rotate(90deg); }
+        .cover-frame .frame-corner--br { bottom: 4.2px; right: 4.2px; transform: rotate(180deg); }
+        .cover-frame .frame-corner--bl { bottom: 4.2px; left: 4.2px; transform: rotate(270deg); }
 
         .cover-kicker {
             font-size: 0.8rem;
@@ -641,9 +610,9 @@
             display: none;
         }
 
-        /* 倒计时 */
+        /* 倒计时（上下间距由两条分隔线均分） */
         .countdown-section {
-            margin: 26px 0 6px;
+            margin: 0;
             text-align: center;
         }
 
@@ -686,8 +655,16 @@
         }
 
         /* 地址卡 + 导航 */
+        .venue-title {
+            font-size: 0.85rem;
+            letter-spacing: 5px;
+            color: #9e8b72;
+            margin-bottom: 12px;
+            font-family: 'Huiwen Mincho', 'Noto Serif SC', serif;
+        }
+
         .venue-card {
-            margin: 6px 0 26px;
+            margin: 0;
             padding: 20px 22px;
             border: 1px solid #e6d9c2;
             border-radius: 14px;
@@ -938,14 +915,11 @@
         @media (max-width: 480px) {
             .invitation-card {
                 padding: 36px 22px 32px;
-                border-radius: 18px;
-            }
-            .invitation-card::before {
-                border-radius: 11px;
+                border-radius: 5px;
             }
             .frame-corner {
-                width: 26px;
-                height: 26px;
+                width: 42px;
+                height: 42px;
             }
             .wedding-date {
                 font-size: 0.9rem;
@@ -962,21 +936,6 @@
             .secondary-photos {
                 gap: 8px;
             }
-            .detail-item {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 8px;
-            }
-            .detail-label {
-                min-width: auto;
-                text-align: center;
-                width: 100%;
-                margin-bottom: -6px;
-            }
-            .detail-value {
-                text-align: center;
-                width: 100%;
-            }
             .greeting-line {
                 font-size: 1rem;
                 letter-spacing: 2px;
@@ -989,9 +948,22 @@
 </head>
 <body>
     <!-- 开屏封面：卷轴信封，点击「开启」进入请柬并播放音乐 -->
+    <!-- 角饰母版需先于两处使用场景定义（封面与请柬共用 #cornerBracket） -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+        <g id="cornerBracket" fill="none" stroke="#c9b08a" stroke-width="3" stroke-linejoin="miter" stroke-miterlimit="4">
+            <path d="M 5,5 H 95 V 25 H 85 V 15 H 15 V 85 H 25 V 95 H 5 Z"/>
+            <path d="M 25,25 H 75 V 40 H 65 V 35 H 35 V 65 H 40 V 75 H 25 Z"/>
+            <path d="M 45,45 H 55 V 55 H 45 Z" fill="#c9b08a" stroke="none"/>
+        </g>
+    </defs></svg>
+
     <div class="cover-screen" id="coverScreen">
         <div class="cover-inner">
             <div class="cover-frame">
+                <svg class="frame-corner frame-corner--tl" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
+                <svg class="frame-corner frame-corner--tr" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
+                <svg class="frame-corner frame-corner--br" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
+                <svg class="frame-corner frame-corner--bl" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
                 <div class="cover-kicker">谨 具 帖 恭 请</div>
                 <div class="cover-names">蔡银坤<span class="amp">&</span>许博仁</div>
                 <div class="cover-date">丙午年 · 八月廿三</div>
@@ -1005,10 +977,11 @@
     <canvas id="petalsCanvas"></canvas>
 
     <main class="invitation-card">
-        <svg class="frame-corner frame-corner--tl" viewBox="0 0 44 44" aria-hidden="true"><g fill="none" stroke="#c9b08a" stroke-width="1.1"><path d="M6 26 L6 6 L26 6"/><path d="M12 32 L12 12 L32 12"/><path d="M18 38 L18 18 L38 18"/></g><rect x="27" y="27" width="4" height="4" fill="#c9b08a" transform="rotate(45 29 29)"/></svg>
-        <svg class="frame-corner frame-corner--tr" viewBox="0 0 44 44" aria-hidden="true"><g fill="none" stroke="#c9b08a" stroke-width="1.1"><path d="M6 26 L6 6 L26 6"/><path d="M12 32 L12 12 L32 12"/><path d="M18 38 L18 18 L38 18"/></g><rect x="27" y="27" width="4" height="4" fill="#c9b08a" transform="rotate(45 29 29)"/></svg>
-        <svg class="frame-corner frame-corner--br" viewBox="0 0 44 44" aria-hidden="true"><g fill="none" stroke="#c9b08a" stroke-width="1.1"><path d="M6 26 L6 6 L26 6"/><path d="M12 32 L12 12 L32 12"/><path d="M18 38 L18 18 L38 18"/></g><rect x="27" y="27" width="4" height="4" fill="#c9b08a" transform="rotate(45 29 29)"/></svg>
-        <svg class="frame-corner frame-corner--bl" viewBox="0 0 44 44" aria-hidden="true"><g fill="none" stroke="#c9b08a" stroke-width="1.1"><path d="M6 26 L6 6 L26 6"/><path d="M12 32 L12 12 L32 12"/><path d="M18 38 L18 18 L38 18"/></g><rect x="27" y="27" width="4" height="4" fill="#c9b08a" transform="rotate(45 29 29)"/></svg>
+        <!-- 四角角饰：复用 body 顶部定义的 #cornerBracket 回纹母版 -->
+        <svg class="frame-corner frame-corner--tl" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
+        <svg class="frame-corner frame-corner--tr" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
+        <svg class="frame-corner frame-corner--br" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
+        <svg class="frame-corner frame-corner--bl" viewBox="0 0 100 100" aria-hidden="true"><use href="#cornerBracket"/></svg>
         <div class="ornament"></div>
 
         <!-- 新人姓名 许博仁 & 蔡银坤 -->
@@ -1061,6 +1034,8 @@
             </div>
         </div>
 
+        <div class="divider-light"></div>
+
         <!-- 婚礼倒计时 -->
         <div class="countdown-section" id="countdownSection">
             <div class="countdown-title">距 花 期 还 有</div>
@@ -1072,20 +1047,11 @@
             </div>
         </div>
 
-        <!-- 婚礼信息 -->
-        <div class="details">
-            <div class="detail-item">
-                <span class="detail-label">地点</span>
-                <span class="detail-value location-highlight">河北省保定市易县好年景烤鸭店</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">时间</span>
-                <span class="detail-value">2026年10月3日 · 星期六</span>
-            </div>
-        </div>
+        <div class="divider-light"></div>
 
-        <!-- 地址卡：复制地址 + 一键导航 -->
+        <!-- 地址卡：完整地址 + 复制 + 一键导航（婚期已在开篇与倒计时中呈现，不再重复） -->
         <div class="venue-card">
+            <div class="venue-title">婚 礼 地 点</div>
             <div class="venue-name">好年景烤鸭店</div>
             <div class="venue-addr" id="venueAddr">河北省保定市易县</div>
             <div class="venue-actions">
